@@ -1,10 +1,11 @@
+
+
 require('dotenv').config();
 const { ApolloServer } = require('apollo-server');
 const { typeDefs } = require('./src/schema');
 const resolvers = require('./src/resolvers').resolvers
 const redis = require('./config/redis');
 const mongodb = require('./config/mongodb')
-
 
 const server = new ApolloServer({
     typeDefs, resolvers, context: ({ req }) => ({

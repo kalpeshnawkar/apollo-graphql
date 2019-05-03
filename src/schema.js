@@ -47,6 +47,9 @@ type Note {
     verifyOauth:Message
     isArchive(noteID:String!):Message
     isTrash(noteID:String!):Message
+    getRepo:Message
+    setReminder(noteID:String!,date:String!):Message
+    deleteReminder(noteID:String!):Message
  }
 `;
 

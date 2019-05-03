@@ -18,7 +18,8 @@ var userSchema = new schema({  // defining the mongodb schema
 
     },
     isEmailverify: {
-        type : Boolean
+        type : Boolean, 
+        default : false
     },
     gitVerify: {
         type: Boolean,

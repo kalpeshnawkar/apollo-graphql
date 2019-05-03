@@ -1,3 +1,7 @@
+/**
+* @description: requiring the neccessary files
+*/
+
 const userModel = require('../model/userModel');
 const labelModel =  require('../model/labelModel');
 const noteModel = require('../model/noteModel'); 
@@ -18,15 +22,28 @@ const isArchive = require('../mutations/notes/notes').isArchive;
 const isTrash = require('../mutations/notes/notes').isTrash;
 const oAuth = require('../mutations/oauth/oAuth').oAuth;
 const verifyOauth = require('../mutations/oauth/verify').verifyOauth
+const getRepo = require('../mutations/oauth/getRepo').getRepo
+const setReminder = require('../mutations/notes/notes').setReminder
+const deleteReminder = require('../mutations/notes/notes').deleteReminder
 
 exports.resolvers = {
+    /**
+     * @description : query for finding all the users registered 
+     */
+
     Query: {
         users: async (parent, args) => {
-            var user = await userModel.find({_id: args.userID}).exec()
+            var user = await userModel.find().exec()
             console.log(user);
             return user
         }
     },
+
+    /**
+     * @description : query for finding the details about a particular user by the userID and  
+    *                 also the labels and notes related to that particular user.
+     */
+
     User : {
         labels : async (parent) => {
             var label =  await labelModel.find({userID : parent.id}).exec()
@@ -68,7 +85,10 @@ exports.resolvers = {
         isArchive,
         isTrash,
         oAuth,
-        verifyOauth
+        verifyOauth,
+        getRepo,
+        setReminder,
+        deleteReminder
     }
 }
 

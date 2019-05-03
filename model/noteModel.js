@@ -16,7 +16,7 @@ var noteSchema = new schema({  // defining the mongodb schema
     },
     description: {
         type: String,
-        required: true
+        //required: true
     },
     isArchive: {
         type: Boolean,
@@ -25,6 +25,9 @@ var noteSchema = new schema({  // defining the mongodb schema
     isTrash: {
         type: Boolean,
         default: false
+    },
+    reminder : {
+        type : Date
     }
 },
     {
