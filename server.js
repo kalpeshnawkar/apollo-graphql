@@ -1,11 +1,19 @@
 
 
 require('dotenv').config();
-const { ApolloServer } = require('apollo-server');
+//const { ApolloServer } = require('apollo-server');
+const { ApolloServer } = require('apollo-server-express');
+const express = require('express')
 const { typeDefs } = require('./src/schema');
 const resolvers = require('./src/resolvers').resolvers
 const redis = require('./config/redis');
-const mongodb = require('./config/mongodb')
+const mongodb = require('./config/mongodb');
+const upload = require('./util/awsS3')
+
+const app = express();
+
+app.use("*",upload.single('image'))
+
 
 const server = new ApolloServer({
     typeDefs, resolvers, context: ({ req }) => ({
@@ -15,7 +23,8 @@ const server = new ApolloServer({
     })
 });
 
-server.listen({ port: 4000 })
-    .then(({ url }) => {
-        console.log(`🚀 Server ready at ${url}`);
-    });
+server.applyMiddleware({app ,path: '/graphql'});
+
+app.listen({ port: 4000 } ,() => {
+        console.log(`🚀 Server ready at `);
+    })

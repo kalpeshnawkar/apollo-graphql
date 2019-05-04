@@ -49,12 +49,6 @@ exports.signUp =
                 */
                 var token = await jwt.sign({ "email": args.email }, process.env.SECRET);
                 client.set("registerToken" + args._id, token); // saving the token in redis cache
-                client.get("registerToken" + args._id, function (error, result) {
-                    if (error) {
-                        console.log(error);
-                    }
-                    console.log('Register token-> ' + result);
-                });
                 var url = `http://localhost:4000/token=${token}`;
                 sendMail(url, args.email);
                 return {

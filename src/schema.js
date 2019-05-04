@@ -50,6 +50,7 @@ type Note {
     getRepo:Message
     setReminder(noteID:String!,date:String!):Message
     deleteReminder(noteID:String!):Message
+    imageUpload:Message
  }
 `;
 

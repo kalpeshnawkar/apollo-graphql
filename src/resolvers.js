@@ -25,6 +25,7 @@ const verifyOauth = require('../mutations/oauth/verify').verifyOauth
 const getRepo = require('../mutations/oauth/getRepo').getRepo
 const setReminder = require('../mutations/notes/notes').setReminder
 const deleteReminder = require('../mutations/notes/notes').deleteReminder
+const imageUpload = require('../mutations/imageUpload').imageUpload
 
 exports.resolvers = {
     /**
@@ -88,7 +89,8 @@ exports.resolvers = {
         verifyOauth,
         getRepo,
         setReminder,
-        deleteReminder
+        deleteReminder,
+        imageUpload
     }
 }
 
