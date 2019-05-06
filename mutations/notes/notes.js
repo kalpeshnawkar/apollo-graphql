@@ -18,7 +18,6 @@ function allNotes() {
  * @purpose : to create a note for the specified user
  */
 
-
 allNotes.prototype.createNote = async (parent, args, context) => {
     try {
         //validations for the title and description
@@ -32,7 +31,6 @@ allNotes.prototype.createNote = async (parent, args, context) => {
                 "message": "description should be minimum of 5 characters"
             }
         }
-
         //verifying the token and to get the user ID 
         var payload = await jwt.verify(context.token, process.env.SECRET);
         console.log(payload.userID)
@@ -74,7 +72,6 @@ allNotes.prototype.createNote = async (parent, args, context) => {
  * @description: Mutation to update a note
  * @purpose : to update a note for the specified user
  */
-
 
 allNotes.prototype.updateNote = async (parent, args, context) => {
     try {
@@ -216,19 +213,24 @@ allNotes.prototype.removeLabelNote = async (parent, args, context) => {
  */
 
 allNotes.prototype.isArchive = async (parent, args, context) => {
-    if (args.noteID) {
-        console.log(args.noteID);
-        //setting the isArchive field to true for the given note id 
-        var note = await noteModel.findOneAndUpdate({ "_id": args.noteID }, { $set: { isArchive: true } })
-        console.log(note);
-        if (!note) {
+    try {
+        if (args.noteID) {
+            console.log(args.noteID);
+            //setting the isArchive field to true for the given note id 
+            var note = await noteModel.findOneAndUpdate({ "_id": args.noteID }, { $set: { isArchive: true } })
+            console.log(note);
+            if (!note) {
+                return {
+                    "message": "note not found"
+                }
+            }
             return {
-                "message": "note not found"
+                "message": "Archived :)"
             }
         }
-        return {
-            "message": "Archived :)"
-        }
+    }
+    catch (err) {
+        console.log("ERROR", err);
     }
 }
 
@@ -238,42 +240,54 @@ allNotes.prototype.isArchive = async (parent, args, context) => {
  */
 
 allNotes.prototype.isTrash = async (parent, args, context) => {
-    if (args.noteID) {
-        //setting the isTrash field to true for the given note id 
-        var note = await noteModel.findOneAndUpdate({ "_id": args.noteID }, { $set: { "isTrash": true } })
-        if (!note) {
+    try {
+        if (args.noteID) {
+            //setting the isTrash field to true for the given note id 
+            var note = await noteModel.findOneAndUpdate({ "_id": args.noteID }, { $set: { "isTrash": true } })
+            if (!note) {
+                return {
+                    "message": "note not found"
+                }
+            }
             return {
-                "message": "note not found"
+                "message": "Note in Trash :("
             }
         }
-        return {
-            "message": "Note in Trash :("
-        }
     }
-
+    catch (err) {
+        console.log("ERROR", err);
+    }
 }
 
 allNotes.prototype.setReminder = async (parent, args, context) => {
-    if (args.date) {
-        var date = new Date(args.date);
-        console.log(date);
-        //find the note by note id and updating the reminder field
-        var reminder = await noteModel.findOneAndUpdate({ _id: args.noteID }, { $set: { reminder: date } })
-        if (!reminder) {
-            return { "message": "error while setting the reminder" }
+    try {
+        if (args.date) {
+            var date = new Date(args.date);
+            console.log(date);
+            //find the note by note id and updating the reminder field
+            var reminder = await noteModel.findOneAndUpdate({ _id: args.noteID }, { $set: { reminder: date } })
+            if (!reminder) {
+                return { "message": "error while setting the reminder" }
+            }
+            return { "message": "reminder set @ " + args.date }
         }
-        return { "message": "reminder set @ " + args.date }
+    }
+    catch (err) {
+        console.log("ERROR", err);
     }
 }
 
-
 allNotes.prototype.deleteReminder = async (parent, args, context) => {
-    //find the note by note id and removing the reminder field
-    var reminder = await noteModel.findOneAndRemove({ _id: args.noteID }, { reminder })
-    if (!reminder) {
-        return { "message": "error while deleting the reminder" }
+    try {
+        //find the note by note id and removing the reminder field
+        var reminder = await noteModel.findOneAndRemove({ _id: args.noteID }, { reminder })
+        if (!reminder) {
+            return { "message": "error while deleting the reminder" }
+        }
+        return { "message": "reminder deleted " }
     }
-    return { "message": "reminder deleted " }
-
+    catch (err) {
+        console.log("ERROR", err);
+    }
 }
 module.exports = new allNotes;

@@ -1,7 +1,14 @@
+/**
+ * @description: requiring nodemailer
+ */
+
 const nodemailer = require('nodemailer');
-/*
-function to send the email  
-*/
+
+/**
+ * @description: Mutation to send an email 
+ * @purpose : to send an Email to the given email id 
+ */
+
 exports.sendEmailFunction = (url,email) => {
     const transporter = nodemailer.createTransport({
         service: 'gmail',

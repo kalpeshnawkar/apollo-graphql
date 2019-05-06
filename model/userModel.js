@@ -1,6 +1,15 @@
+/**
+ * @description: requiring mongoose ORM
+ */
+
 const mongoose = require('mongoose');
+
+/**
+ * @description: mongodb schema for labels 
+ */
+
 var schema = mongoose.Schema;
-var userSchema = new schema({  // defining the mongodb schema
+var userSchema = new schema({  
 
     firstName: {
         type: String,

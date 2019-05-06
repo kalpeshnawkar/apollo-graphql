@@ -1,4 +1,6 @@
-
+/**
+* @description: requiring the neccessary files
+*/
 
 require('dotenv').config();
 //const { ApolloServer } = require('apollo-server');
@@ -8,23 +10,27 @@ const { typeDefs } = require('./src/schema');
 const resolvers = require('./src/resolvers').resolvers
 const redis = require('./config/redis');
 const mongodb = require('./config/mongodb');
-const upload = require('./util/awsS3')
+const upload = require('./util/awsS3');
 
+//creating a express instance
 const app = express();
 
-app.use("*",upload.single('image'))
+app.use("*", upload.single('image'))
 
 
 const server = new ApolloServer({
-    typeDefs, resolvers, context: ({ req }) => ({
-        // get the user token from the headers
+    typeDefs,
+    resolvers,
+    context: ({ req }) => ({
+        // to get the user token/code from the query
         token: req.query.token,
-        code :req.query.code
+        code: req.query.code
     })
 });
 
-server.applyMiddleware({app ,path: '/graphql'});
+server.applyMiddleware({ app, path: '/graphql' });
 
-app.listen({ port: 4000 } ,() => {
-        console.log(`🚀 Server ready at `);
-    })
+// listening to port
+app.listen({ port: 4000 }, () => {
+    console.log(`🚀 Server ready at `);
+})

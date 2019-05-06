@@ -1,4 +1,13 @@
+/**
+ * @description: requiring mongoose ORM
+ */
+
 const mongoose = require('mongoose');
+
+/**
+ * @description: mongodb schema for labels 
+ */
+
 var schema = mongoose.Schema;
 var noteSchema = new schema({  // defining the mongodb schema
     labelID: [{
@@ -8,7 +17,6 @@ var noteSchema = new schema({  // defining the mongodb schema
     userID: {
         type: schema.Types.ObjectId,
         ref: 'userSchema'
-
     },
     title: {
         type: String,

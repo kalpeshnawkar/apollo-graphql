@@ -1,5 +1,11 @@
 const { gql } = require('apollo-server');
+
+/**
+* @description: The GraphQL schema
+*/
+
 const typeDefs = gql`
+
 type User {
     _id : ID!
     firstName : String!
@@ -26,7 +32,7 @@ type Note {
 }
  
  type Query {
-     users(userID:String!) :[User]  
+     users(userID:String) :[User]  
  }
 
  type Mutation{

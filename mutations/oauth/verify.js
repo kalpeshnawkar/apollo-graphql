@@ -5,12 +5,12 @@
 const userModel = require('../../model/userModel');
 const jwt = require('jsonwebtoken');
 
-/* 
-    mutation for verifying the token and login
-*/
+/**
+ * @description: Mutation for verfying the token and login 
+ */
 
 exports.verifyOauth = async (parent, args, context) => {
-
+    try {
         var payload = await jwt.verify(context.token, "gitsecret"); //token verification
         if (!payload) {
             return {
@@ -42,7 +42,12 @@ exports.verifyOauth = async (parent, args, context) => {
                 "message": " user not found !!! "
             }
         }
-    
+    }
+    catch (err) {
+        console.log("ERROR", err);
+
+    }
+
 }
 
 

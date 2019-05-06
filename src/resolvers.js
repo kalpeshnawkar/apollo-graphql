@@ -3,8 +3,8 @@
 */
 
 const userModel = require('../model/userModel');
-const labelModel =  require('../model/labelModel');
-const noteModel = require('../model/noteModel'); 
+const labelModel = require('../model/labelModel');
+const noteModel = require('../model/noteModel');
 const signUp = require('../mutations/users/user').signUp;
 const login = require('../mutations/users/user').login;
 const isEmailVerify = require('../mutations/users/user').isEmailVerify
@@ -27,6 +27,10 @@ const setReminder = require('../mutations/notes/notes').setReminder
 const deleteReminder = require('../mutations/notes/notes').deleteReminder
 const imageUpload = require('../mutations/imageUpload').imageUpload
 
+/**
+* @description: A map of functions which return data for the schema.
+*/
+
 exports.resolvers = {
     /**
      * @description : query for finding all the users registered 
@@ -34,9 +38,15 @@ exports.resolvers = {
 
     Query: {
         users: async (parent, args) => {
-            var user = await userModel.find().exec()
+            try {
+            var user = await userModel.find({"userID" : args.userID}).exec()
             console.log(user);
-            return user
+            return user;
+            }
+            catch(err)
+            {
+                console.log("ERROR",err);
+            }
         }
     },
 
@@ -45,26 +55,36 @@ exports.resolvers = {
     *                 also the labels and notes related to that particular user.
      */
 
-    User : {
-        labels : async (parent) => {
-            var label =  await labelModel.find({userID : parent.id}).exec()
-            if(!label)
-            {
-                return {
-                    "message" : "NO labels fouund"
+    User: {
+        labels: async (parent) => {
+            try {
+                var label = await labelModel.find({ userID: parent.id }).sort({ "labelName": 1 })
+                if (!label) {
+                    return {
+                        "message": "NO labels fouund"
+                    }
                 }
+                return label;
             }
-            return label;
+            catch (err) {
+                console.log("ERROR", err);
+
+            }
         },
-        notes : async (parent) => {
-            var note =  await noteModel.find({userID : parent.id}).exec()
-            if(!note)
-            {
-                return {
-                    "message" : "NO notes fouund"
+        notes: async (parent) => {
+            try {
+                var note = await noteModel.find({ userID: parent.id }).exec()
+                if (!note) {
+                    return {
+                        "message": "NO notes fouund"
+                    }
                 }
+                return note;
             }
-            return note;
+            catch (err) {
+                console.log("ERROR", err);
+
+            }
 
         }
     },
