@@ -28,7 +28,7 @@ allNotes.prototype.createNote = async (parent, args, context) => {
         }
         if (args.description.length < 3) {
             return {
-                "message": "description should be minimum of 5 characters"
+                "message": "description should be minimum of 3 characters"
             }
         }
         //verifying the token and to get the user ID 

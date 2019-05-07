@@ -84,12 +84,13 @@ exports.oAuth = async (parent, args, context) => {
                 //sending the email to the user email for logging in 
                 util.sendEmailFunction(url, response.data.email)
             })
+            return { "message": "git authentication successful" };
+
         }
         catch (err) {
             console.log("ERROR", err);
         }
-        return { "message": "git authentication successful" }
-
+        
 
 
     }

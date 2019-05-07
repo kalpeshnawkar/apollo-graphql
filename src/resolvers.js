@@ -1,7 +1,8 @@
 /**
 * @description: requiring the neccessary files
 */
-
+const redis = require('async-redis');
+const client = redis.createClient();
 const userModel = require('../model/userModel');
 const labelModel = require('../model/labelModel');
 const noteModel = require('../model/noteModel');
@@ -32,6 +33,7 @@ const imageUpload = require('../mutations/imageUpload').imageUpload
 */
 
 exports.resolvers = {
+
     /**
      * @description : query for finding all the users registered 
      */
@@ -39,8 +41,9 @@ exports.resolvers = {
     Query: {
         users: async (parent, args) => {
             try {
-            var user = await userModel.find({"userID" : args.userID}).exec()
-            console.log(user);
+                
+            var user = await userModel.find({"_id" : args.userID})
+           // console.log(user.length);
             return user;
             }
             catch(err)
@@ -58,13 +61,13 @@ exports.resolvers = {
     User: {
         labels: async (parent) => {
             try {
-                var label = await labelModel.find({ userID: parent.id }).sort({ "labelName": 1 })
-                if (!label) {
-                    return {
-                        "message": "NO labels fouund"
-                    }
-                }
-                return label;
+                console.log(parent.id);
+                
+              var labels = await client.get("labels"+parent.id) 
+              console.log(labels);
+              
+              return JSON.parse(labels);
+            
             }
             catch (err) {
                 console.log("ERROR", err);

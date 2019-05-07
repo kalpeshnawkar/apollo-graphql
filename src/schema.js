@@ -11,7 +11,7 @@ type User {
     firstName : String!
     lastName : String!
     email : String!
-    password : String!
+    password : String! 
     labels : [Label]
     notes : [Note]
  }
@@ -32,7 +32,7 @@ type Note {
 }
  
  type Query {
-     users(userID:String) :[User]  
+     users(userID:String):[User]  
  }
 
  type Mutation{

@@ -12,6 +12,7 @@ const sendMail = require('../../util/mail').sendEmailFunction;
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
 const client = redis.createClient();
+const labelModel = require('../../model/labelModel')
 
 /**
  * @description: Mutation for sign up
@@ -30,7 +31,6 @@ exports.signUp =
             }
 
             let encryptedPassword = bcrypt.hashSync(args.password, 10); // encrypting the password
-
             user = await userModel.find({ 'email': args.email })  //checking the database for existing user with the same email 
             //console.log(user);
             if (!user.length > 0) {
@@ -89,7 +89,7 @@ exports.login =
 
             user = await userModel.find({ 'email': args.email })  // checking if the email already exists in the database 
             if (user.length > 0) {
-                console.log(user[0].verification);           //email id verification(can not login unless the email is verified)
+                // console.log(user[0].verification);           //email id verification(can not login unless the email is verified)
                 if (user[0].verification === false) {
                     return {
                         "message": "Email not verified"
@@ -99,8 +99,10 @@ exports.login =
                 let valid = await bcrypt.compare(args.password, user[0].password); //encrypting the password
                 if (valid) {
                     let token = await jwt.sign({ 'email': args.email, "userID": user[0]._id, "password": user[0].password }, process.env.SECRET, { expiresIn: '1d' }) //token generation
-                    client.set("loginToken" + user[0]._id, token)
-
+                    var labels = await labelModel.find({userID : user[0]._id}).sort({labelName : 1});
+                    //console.log(labels);
+                    
+                    await client.set("labels"+user[0]._id, JSON.stringify(labels),redis.print);
                     return {
                         "message": "login successful ",
                         "token": token
@@ -117,6 +119,8 @@ exports.login =
                     "message": "Email ID is not registered"
                 }
             }
+
+        
         }
         catch (err) {
             console.log("ERROR: " + err);
