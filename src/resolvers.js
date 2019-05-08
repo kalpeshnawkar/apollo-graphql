@@ -1,6 +1,7 @@
 /**
 * @description: requiring the neccessary files
 */
+const { getRepositoryByName,getAuthorByName } = require('../util/github-connector')
 const redis = require('async-redis');
 const client = redis.createClient();
 const userModel = require('../model/userModel');
@@ -41,17 +42,35 @@ exports.resolvers = {
     Query: {
         users: async (parent, args) => {
             try {
-                
-            var user = await userModel.find({"_id" : args.userID})
-           // console.log(user.length);
-            return user;
+
+                var user = await userModel.find({ "_id": args.userID })
+                // console.log(user.length);
+                return user;
             }
-            catch(err)
-            {
-                console.log("ERROR",err);
+            catch (err) {
+                console.log("ERROR", err);
             }
-        }
-    },
+        },
+        GitQuery: {
+            gitHubRepository(root, args, context) {
+                console.log("tmkc");
+
+                return getRepositoryByName(args.name);
+            }
+        },
+        Submission: {
+            repository(root, args, context) {
+                console.log("asd");
+
+                return getRepositoryByName(root.repositoryFullName);
+            }
+        },
+        Repository: {
+            owner(root, args, context) {
+                return getAuthorByName(root.owner);
+            },
+        },
+},
 
     /**
      * @description : query for finding the details about a particular user by the userID and  
@@ -59,21 +78,21 @@ exports.resolvers = {
      */
 
     User: {
-        labels: async (parent) => {
-            try {
-                console.log(parent.id);
-                
-              var labels = await client.get("labels"+parent.id) 
-              console.log(labels);
-              
-              return JSON.parse(labels);
-            
-            }
-            catch (err) {
-                console.log("ERROR", err);
+    labels: async (parent) => {
+        try {
+            console.log(parent.id);
 
-            }
-        },
+            var labels = await client.get("labels" + parent.id)
+            console.log(labels);
+
+            return JSON.parse(labels);
+
+        }
+        catch (err) {
+            console.log("ERROR", err);
+
+        }
+    },
         notes: async (parent) => {
             try {
                 var note = await noteModel.find({ userID: parent.id }).exec()
@@ -90,10 +109,10 @@ exports.resolvers = {
             }
 
         }
-    },
+},
 
-    Mutation: {
-        signUp,
+Mutation: {
+    signUp,
         login,
         isEmailVerify,
         forgotPassword,
@@ -114,6 +133,6 @@ exports.resolvers = {
         setReminder,
         deleteReminder,
         imageUpload
-    }
+}
 }
 

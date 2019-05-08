@@ -2,7 +2,7 @@ const chai = require('chai')
 const expect = chai.expect;
 const test = require('supertest');
 
-describe('login test', () => 
+describe('login test', () =>
     it('login', (done) => {
         test("http://localhost:4000")
             .post('/graphql')
@@ -15,7 +15,7 @@ describe('login test', () =>
                 )
                 done();
             })
-   }))
+    }))
 
 describe('registration test', () =>
     it('register', (done) => {
@@ -47,4 +47,18 @@ describe('forgot password test', () => {
             })
     })
 
+})
+
+describe('resetPassword test', () => {
+    it('resetPassword', (done) => {
+        test("http://localhost:4000")
+            .post('/graphql')
+            .send({ query: 'mutation{resetPassword(password:"12345678",confirmPassword:"12345678"){message}' })
+            .expect(200)
+            .end((err, res) => {
+                if (err) return done(err);
+                expect(JSON.parse(res.text).data.resetPassword.message).to.deep.equal("password reset successful")
+                done();
+            })
+    })
 })

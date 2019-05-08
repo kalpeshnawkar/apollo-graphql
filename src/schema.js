@@ -18,6 +18,7 @@ type User {
  type Message {
      message : String
      token : String 
+     name : String
  }
 
  type Label {
@@ -33,6 +34,10 @@ type Note {
  
  type Query {
      users(userID:String):[User]  
+     GitQuery(name:String):Message
+     Submission:Message
+     Repository:Message
+
  }
 
  type Mutation{
@@ -57,6 +62,8 @@ type Note {
     setReminder(noteID:String!,date:String!):Message
     deleteReminder(noteID:String!):Message
     imageUpload:Message
+    
+    
  }
 `;
 
