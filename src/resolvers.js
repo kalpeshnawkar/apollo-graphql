@@ -1,7 +1,6 @@
 /**
 * @description: requiring the neccessary files
 */
-const { getRepositoryByName,getAuthorByName } = require('../util/github-connector')
 const redis = require('async-redis');
 const client = redis.createClient();
 const userModel = require('../model/userModel');
@@ -50,26 +49,7 @@ exports.resolvers = {
             catch (err) {
                 console.log("ERROR", err);
             }
-        },
-        GitQuery: {
-            gitHubRepository(root, args, context) {
-                console.log("tmkc");
-
-                return getRepositoryByName(args.name);
-            }
-        },
-        Submission: {
-            repository(root, args, context) {
-                console.log("asd");
-
-                return getRepositoryByName(root.repositoryFullName);
-            }
-        },
-        Repository: {
-            owner(root, args, context) {
-                return getAuthorByName(root.owner);
-            },
-        },
+        }
 },
 
     /**
