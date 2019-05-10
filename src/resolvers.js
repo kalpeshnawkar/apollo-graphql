@@ -27,7 +27,7 @@ const getRepo = require('../mutations/oauth/getRepo').getRepo
 const setReminder = require('../mutations/notes/notes').setReminder
 const deleteReminder = require('../mutations/notes/notes').deleteReminder
 const imageUpload = require('../mutations/imageUpload').imageUpload
-
+const createBranch = require('../mutations/oauth/createBranch').createBranch;
 /**
 * @description: A map of functions which return data for the schema.
 */
@@ -112,7 +112,8 @@ Mutation: {
         getRepo,
         setReminder,
         deleteReminder,
-        imageUpload
+        imageUpload,
+        createBranch
 }
 }
 
