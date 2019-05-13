@@ -259,6 +259,10 @@ allNotes.prototype.isTrash = async (parent, args, context) => {
     }
 }
 
+/**
+ * @description: Mutation to set a reminder for a note 
+ */ 
+
 allNotes.prototype.setReminder = async (parent, args, context) => {
     try {
         if (args.date) {
@@ -276,6 +280,10 @@ allNotes.prototype.setReminder = async (parent, args, context) => {
         console.log("ERROR", err);
     }
 }
+
+/**
+ * @description: Mutation to delete a reminder for a note 
+ */ 
 
 allNotes.prototype.deleteReminder = async (parent, args, context) => {
     try {

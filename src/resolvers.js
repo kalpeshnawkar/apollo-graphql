@@ -23,11 +23,14 @@ const isArchive = require('../mutations/notes/notes').isArchive;
 const isTrash = require('../mutations/notes/notes').isTrash;
 const oAuth = require('../mutations/oauth/oAuth').oAuth;
 const verifyOauth = require('../mutations/oauth/verify').verifyOauth
-const getRepo = require('../mutations/oauth/getRepo').getRepo
+const getRepo = require('../mutations/gitMutations/getRepo').getRepo
 const setReminder = require('../mutations/notes/notes').setReminder
 const deleteReminder = require('../mutations/notes/notes').deleteReminder
 const imageUpload = require('../mutations/imageUpload').imageUpload
-const createBranch = require('../mutations/oauth/createBranch').createBranch;
+const createBranch = require('../mutations/gitMutations/branch').createBranch;
+const deleteBranch = require('../mutations/gitMutations/branch').deleteBranch;
+const addStar = require('../mutations/gitMutations/star').addStar
+const removeStar = require('../mutations/gitMutations/star').removeStar
 /**
 * @description: A map of functions which return data for the schema.
 */
@@ -113,7 +116,10 @@ Mutation: {
         setReminder,
         deleteReminder,
         imageUpload,
-        createBranch
+        createBranch,
+        deleteBranch,
+        addStar,
+        removeStar
 }
 }
 

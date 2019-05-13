@@ -18,7 +18,7 @@ exports.createLabel =
     async (parent, args, context) => {
         try {
             //verifying the token and to get the user ID 
-            var payload = await jwt.verify(context.token, process.env.SECRET); 
+            var payload = await jwt.verify(context.token, process.env.SECRET);
             //checking whether the label name is already saved
             var user = await labelModel.find({ "labelName": args.labelName, "userID": payload.userID });
             if (user.length > 0) {

@@ -33,7 +33,7 @@ type Note {
 }
  
  type Query {
-     users(userID:String):[User]  
+     users(userID:String, first:Int, skip:Int):[User]  
  }
 
  type Mutation{
@@ -58,9 +58,10 @@ type Note {
     setReminder(noteID:String!,date:String!):Message
     deleteReminder(noteID:String!):Message
     imageUpload:Message
-    createBranch(name:String!):Message
-    
-    
+    createBranch(user:String!,repositoryName:String!,branchName:String!):Message
+    deleteBranch(user:String!,repositoryName:String!,branchName:String!):Message
+    addStar(starabbleId:String,clientMutation:String):Message
+    removeStar(starabbleId:String,clientMutation:String):Message
  }
 `;
 
