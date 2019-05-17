@@ -48,17 +48,19 @@ exports.signUp =
                 generating the token and sending it to the email provided to check the authenticity of the user
                 */
                 var token = await jwt.sign({ "email": args.email }, process.env.SECRET);
-                client.set("registerToken" + args._id, token); // saving the token in redis cache
+                client.set("registerToken"+args._id, token); // saving the token in redis cache
                 var url = `http://localhost:4000/token=${token}`;
                 sendMail(url, args.email);
                 return {
                     "message": "registration successful",
-                    "token": token
+                    "token": token,
+                    "success" : true
                 }
             }
             else {
                 return {
-                    "message": "registration unsuccessful , email already exists"
+                    "message": "registration unsuccessful , email already exists",
+                    "success" : false
                 }
             }
         }
@@ -105,18 +107,21 @@ exports.login =
                     await client.set("labels"+user[0]._id, JSON.stringify(labels),redis.print);
                     return {
                         "message": "login successful ",
-                        "token": token
+                        "token": token,
+                        "success" : true
                     }
                 }
                 else {
                     return {
-                        "message": "Incorrect password, Try Again!"
+                        "message": "Incorrect password, Try Again!",
+                        "success" : false
                     }
                 }
             }
             else {
                 return {
-                    "message": "Email ID is not registered"
+                    "message": "Email ID is not registered",
+                    "success" : false
                 }
             }
 

@@ -34,19 +34,22 @@ exports.createLabel =
             labelSave = await newLabel.save();
             if (labelSave) {
                 return {
-                    "message": "label added"
+                    "message": "label added",
+                    "success" : true
                 }
             }
             else {
                 return {
-                    "message": "error while saving label"
+                    "message": "error while saving label",
+                    "success" : false
                 }
             }
         }
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err
+                "message": err,
+                "success" : false
             }
         }
     }
@@ -60,25 +63,31 @@ exports.removeLabel =
     async (parent, args, context) => {
         try {
             //verifying the token and to get the user ID 
+            console.log(context.token);
+            
             var payload = await jwt.verify(context.token, process.env.SECRET);
             // console.log(payload.userID)
             //find the label by id and deleting it
-            user = labelModel.findByIdAndRemove({ "_id": args.labelID });
-            if (!user) {
+            console.log(args.labelID)
+            const label = await labelModel.findByIdAndRemove({ "_id": args.labelID });
+            if (!label) {
                 return {
-                    "message": "enter a valid label name"
+                    "message": "enter a valid label name",
+                    "success" : false
                 }
             }
             else {
                 return {
-                    "message": "label removed successfully"
+                    "message": "label removed successfully",
+                    "success" : true
                 }
             }
         }
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err
+                "message": err,
+                "success" : false
             }
         }
     }
@@ -99,19 +108,22 @@ exports.updateLabel =
             console.log(label)
             if (label) {
                 return {
-                    "message": "label name updated successfully"
+                    "message": "label name updated successfully",
+                    "success" : true
                 }
             }
             else {
                 return {
-                    "message": "error while updating the label name"
+                    "message": "error while updating the label name",
+                    "success" : false
                 }
             }
         }
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err
+                "message": err,
+                "success" : false
             }
         }
     }

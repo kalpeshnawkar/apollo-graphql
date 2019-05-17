@@ -31,6 +31,7 @@ const createBranch = require('../mutations/gitMutations/branch').createBranch;
 const deleteBranch = require('../mutations/gitMutations/branch').deleteBranch;
 const addStar = require('../mutations/gitMutations/star').addStar
 const removeStar = require('../mutations/gitMutations/star').removeStar
+const setColaborator = require('../mutations/colabMutations/colab').setColaborator
 /**
 * @description: A map of functions which return data for the schema.
 */
@@ -53,7 +54,7 @@ exports.resolvers = {
                 console.log("ERROR", err);
             }
         }
-},
+    },
 
     /**
      * @description : query for finding the details about a particular user by the userID and  
@@ -61,21 +62,18 @@ exports.resolvers = {
      */
 
     User: {
-    labels: async (parent) => {
-        try {
-            console.log(parent.id);
+        labels: async (parent) => {
+            try {
+                console.log(parent.id);
+                var labels = await client.get("labels" + parent.id)
+                console.log(labels);
+                return JSON.parse(labels);
+            }
+            catch (err) {
+                console.log("ERROR", err);
 
-            var labels = await client.get("labels" + parent.id)
-            console.log(labels);
-
-            return JSON.parse(labels);
-
-        }
-        catch (err) {
-            console.log("ERROR", err);
-
-        }
-    },
+            }
+        },
         notes: async (parent) => {
             try {
                 var note = await noteModel.find({ userID: parent.id }).exec()
@@ -90,12 +88,11 @@ exports.resolvers = {
                 console.log("ERROR", err);
 
             }
-
         }
-},
+    },
 
-Mutation: {
-    signUp,
+    Mutation: {
+        signUp,
         login,
         isEmailVerify,
         forgotPassword,
@@ -119,7 +116,8 @@ Mutation: {
         createBranch,
         deleteBranch,
         addStar,
-        removeStar
-}
+        removeStar,
+        setColaborator
+    }
 }
 

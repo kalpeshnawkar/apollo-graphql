@@ -19,6 +19,7 @@ type User {
      message : String
      token : String 
      name : String
+     success : Boolean
  }
 
  type Label {
@@ -44,7 +45,7 @@ type Note {
     resetPassword(password:String!,confirmPassword:String!):Message
     createLabel(labelName:String!):Message
     removeLabel(labelID:String!):Message
-    updateLabel(newLabelName:String!,newLabelName:String!):Message
+    updateLabel(labelID:String!,newLabelName:String!):Message
     createNote(labelID:String,title:String,description:String!):Message
     updateNote(noteID:String!,newTitle:String,newDescription:String):Message
     removeNote(noteID:String!):Message
@@ -62,6 +63,7 @@ type Note {
     deleteBranch(user:String!,repositoryName:String!,branchName:String!):Message
     addStar(starabbleId:String,clientMutation:String):Message
     removeStar(starabbleId:String,clientMutation:String):Message
+    setColaborator(noteID:String!,colabID:String!):Message
  }
 `;
 

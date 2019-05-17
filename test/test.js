@@ -1,64 +1,112 @@
-const chai = require('chai')
+const chai = require('chai');
 const expect = chai.expect;
-const test = require('supertest');
+const test = require('supertest')
+const fs = require("fs")
+const server = require('../server')
+var access_token = "";
 
-describe('login test', () =>
+function test1() {
+    var data = fs.readFileSync('/home/admin1/Desktop/apollo graphql/test/data.JSON');
+    var data1 = JSON.parse(data);
+    return data1;
+}
+
+describe('Register and Login', () => {
+    it("register", (done) => {
+        test("http://localhost:4000")
+            .post('/graphql')
+            .send({ query: test1().register })
+
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err)
+                }
+                expect(JSON.parse(res.text).data.signUp.success).to.be.true
+                done();
+                
+            })
+
+    })
+
     it('login', (done) => {
         test("http://localhost:4000")
             .post('/graphql')
-            .send({ query: 'mutation{login(email:"akshaykc27@gmail.com",password :"123456789"){message}}' })
+            .send({ query: test1().login })
             .expect(200)
             .end((err, res) => {
-                if (err) return done(err);
-                expect(JSON.parse(res.text).data.login.message).to.deep.equal(
-                    "login successful "
-                )
+
+                if (err) {
+                    return done(err)
+                }
+                expect(JSON.parse(res.text).data.login.success).to.be.true
+                //console.log(JSON.parse(res.text).data.login.token)
+                console.log(access_token);
                 done();
             })
-    }))
-
-describe('registration test', () =>
-    it('register', (done) => {
-        test("http://localhost:4000")
-            .post('/graphql')
-            .send({ query: 'mutation{signUp(firstName:"akshay",lastName:"kc",email:"akshaykc270007@gmail.com", password :"12345678"){message}}' })
-            .expect(200)
-            .end((err, res) => {
-                if (err) return done(err);
-                expect(JSON.parse(res.text).data.signUp.message).to.deep.equal(
-                    "registration successful"
-                )
-                done();
-            })
-    }))
-
-describe('forgot password test', () => {
-    it('forgotPassword', (done) => {
-        test("http://localhost:4000")
-            .post('/graphql')
-            .send({ query: 'mutation{forgotPassword(email:"akshaykc27@gmail.com"){message}}' })
-            .expect(200)
-            .end((err, res) => {
-                if (err) return done(err);
-                expect(JSON.parse(res.text).data.forgotPassword.message).to.deep.equal(
-                    "A link to reset your password has been sent to your email"
-                )
-                done();
-            })
-    })
-
+    });
 })
 
-describe('resetPassword test', () => {
-    it('resetPassword', (done) => {
+describe('labels', () => {
+    it('login', (done) => {
         test("http://localhost:4000")
             .post('/graphql')
-            .send({ query: 'mutation{resetPassword(password:"12345678",confirmPassword:"12345678"){message}' })
+            .send({ query: test1().login })
             .expect(200)
             .end((err, res) => {
-                if (err) return done(err);
-                expect(JSON.parse(res.text).data.resetPassword.message).to.deep.equal("password reset successful")
+
+                if (err) {
+                    return done(err)
+                }
+                expect(JSON.parse(res.text).data.login.success).to.be.true
+
+                //console.log(JSON.parse(res.text).data.login.token)
+                access_token =JSON.parse(res.text).data.login.token;
+                console.log(access_token);
+                
                 done();
             })
-    })
+    });
+    it('createLabel', (done) => {
+        test("http://localhost:4000")
+            .post('/graphql')
+            .query({"token":access_token})
+            .send({ query: test1().createLabel })
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err)
+                }
+                expect(JSON.parse(res.text).data.createLabel.success).to.be.true
+                done();
+            })
+    });
+    it('updateLabel', (done) => {
+        test("http://localhost:4000")
+            .post('/graphql')
+            .query({"token":access_token})
+            .send({ query: test1().updateLabel })
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err)
+                }
+                expect(JSON.parse(res.text).data.updateLabel.success).to.be.true
+                done();
+            })
+    });
+    it('removeLabel', (done) => {
+        test("http://localhost:4000")
+            .post('/graphql')
+            .query({"token":access_token})
+            .send({ query: test1().removeLabel })
+            .expect(200)
+            .end((err, res) => {
+                if (err) {
+                    return done(err)
+                }
+                expect(JSON.parse(res.text).data.removeLabel.success).to.be.true
+                done();
+            })
+    });
 })

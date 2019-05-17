@@ -80,7 +80,7 @@ exports.oAuth = async (parent, args, context) => {
                 console.log("after token");
                 console.log('token =>', token)
                 console.log('email =>', response.data.email)
-                var url = `http://localhost:4000?token=${token}`
+                var url = `http://localhost:4000/graphql?token=${token}`
                 //sending the email to the user email for logging in 
                 util.sendEmailFunction(url, response.data.email)
             })

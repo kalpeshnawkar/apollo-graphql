@@ -1,0 +1,7 @@
+{
+    "register": "mutation {signUp(firstName:\"akshay\",lastName:\"kc\",email:\"aksha0ykc562a7aa0a0171@gmail.com\",password:\"12345678\"){message token success} }",
+    "login": "mutation  {login(email:\"akshaykc27@gmail.com\",password:\"123456789\") {message token success} }",
+    "createLabel": "mutation {createLabel(labelName: \"yooooo\") {message success}}",
+    "removeLabel": "mutation {removeLabel(labelID: \"5cdd46ffcf434047c21beea8\") {message success}}",
+    "updateLabel" : "mutation {updateLabel(labelID: \"5cdd46ffcf434047c21beea8\",newLabelName : \"yo boys\") {message success}}" 
+}

@@ -17,14 +17,6 @@ var labelSchema = new schema({
     userID: {
         type: schema.Types.ObjectId,
         ref: 'userSchema'
-    },
-    isArchive: {
-        type: Boolean,
-        default: false
-    },
-    isTrash: {
-        type: Boolean,
-        default: false
     }
 },
     {

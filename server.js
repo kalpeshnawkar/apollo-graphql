@@ -23,7 +23,7 @@ app.use("*", upload.single('image'))
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers,
+    resolvers, 
     context: ({ req }) => ({
         // to get the user token/code from the query
         token: req.query.token,
