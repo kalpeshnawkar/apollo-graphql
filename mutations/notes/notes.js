@@ -23,12 +23,14 @@ allNotes.prototype.createNote = async (parent, args, context) => {
         //validations for the title and description
         if (args.title.length < 3) {
             return {
-                "message": "title should be minimum of 3 characters"
+                "message": "title should be minimum of 3 characters",
+                "success" : false
             }
         }
         if (args.description.length < 3) {
             return {
-                "message": "description should be minimum of 3 characters"
+                "message": "description should be minimum of 3 characters",
+                "success" : false
             }
         }
         //verifying the token and to get the user ID 
@@ -38,7 +40,8 @@ allNotes.prototype.createNote = async (parent, args, context) => {
         note = await noteModel.find({ "title": args.title });
         if (note.length > 0) {
             return {
-                "message": "title already exists"
+                "message": "title already exists",
+                "success" : "false"
             }
         }
         //save the note if not present
@@ -52,12 +55,14 @@ allNotes.prototype.createNote = async (parent, args, context) => {
         noteSave = newNote.save();
         if (noteSave) {
             return {
-                "message": "note added"
+                "message": "note added",
+                "success" : true
             }
         }
         else {
             return {
-                "message": "error while saving note"
+                "message": "error while saving note",
+                "success" : false
             }
         }
     } catch (err) {
@@ -79,7 +84,8 @@ allNotes.prototype.updateNote = async (parent, args, context) => {
         var valid = await noteModel.find({ "title": args.newTitle })
         if (valid) {
             return {
-                "message": "title already exists"
+                "message": "title already exists",
+                "success" : false
             }
         }
         var payload = await jwt.verify(context.token, process.env.SECRET);
@@ -88,19 +94,22 @@ allNotes.prototype.updateNote = async (parent, args, context) => {
             { $set: { title: args.newTitle, description: args.newDescription } })
         if (note) {
             return {
-                "message": "note updated successfully"
+                "message": "note updated successfully",
+                "success" : true
             }
         }
         else {
             return {
-                "message": "error while updating the note name"
+                "message": "error while updating the note name",
+                "success" : false
             }
         }
     }
     catch (err) {
         console.log("ERROR: " + err);
         return {
-            "message": err
+            "message": err,
+            "success" : false
         }
     }
 }
@@ -117,19 +126,22 @@ allNotes.prototype.removeNote = async (parent, args, context) => {
         note = await noteModel.findByIdAndRemove({ "_id": args.noteID, "title": args.title });
         if (!note) {
             return {
-                "message": "enter a valid title name"
+                "message": "enter a valid title name",
+                "success" : false
             }
         }
         else {
             return {
-                "message": "note removed successfully"
+                "message": "note removed successfully",
+                "success" : true
             }
         }
     }
     catch (err) {
         console.log("ERROR: " + err);
         return {
-            "message": err
+            "message": err,
+            "success" : false
         }
     }
 }
@@ -145,7 +157,8 @@ allNotes.prototype.addLabelNote = async (parent, args, context) => {
         var valid = await noteModel.find({ "labelID": args.labelID })
         if (valid.length > 0) {
             return {
-                "message": "id already exists"
+                "message": "id already exists",
+                "success" : false
             }
         }
         //updating the note model with the new label id
@@ -153,12 +166,14 @@ allNotes.prototype.addLabelNote = async (parent, args, context) => {
             { $push: { "labelID": args.labelID } })
         if (note) {
             return {
-                "message": "note updated successfully"
+                "message": "note updated successfully",
+                "success" : true
             }
         }
         else {
             return {
-                "message": "error while updating the note name"
+                "message": "error while updating the note name",
+                "success" : false
             }
         }
 
@@ -182,7 +197,8 @@ allNotes.prototype.removeLabelNote = async (parent, args, context) => {
         var valid = await noteModel.find({ "labelID": args.labelID })
         if (!valid.length > 0) {
             return {
-                "message": "id does not exist"
+                "message": "id does not exist",
+                "success" : false
             }
         }
         //deleting the label linked to the particular note 
@@ -190,12 +206,14 @@ allNotes.prototype.removeLabelNote = async (parent, args, context) => {
             { $pull: { "labelID": args.labelID } })
         if (note) {
             return {
-                "message": " label successfully removed  "
+                "message": " label successfully removed  ",
+                "success" : true
             }
         }
         else {
             return {
-                "message": "error while removing the label"
+                "message": "error while removing the label",
+                "success" : false
             }
         }
     }
@@ -221,11 +239,13 @@ allNotes.prototype.isArchive = async (parent, args, context) => {
             console.log(note);
             if (!note) {
                 return {
-                    "message": "note not found"
+                    "message": "note not found",
+                    "success" : false
                 }
             }
             return {
-                "message": "Archived :)"
+                "message": "Archived :)",
+                "success" : true
             }
         }
     }
@@ -246,11 +266,13 @@ allNotes.prototype.isTrash = async (parent, args, context) => {
             var note = await noteModel.findOneAndUpdate({ "_id": args.noteID }, { $set: { "isTrash": true } })
             if (!note) {
                 return {
-                    "message": "note not found"
+                    "message": "note not found",
+                    "success" : false
                 }
             }
             return {
-                "message": "Note in Trash :("
+                "message": "Note in Trash :(",
+                "success" : true
             }
         }
     }
@@ -271,9 +293,10 @@ allNotes.prototype.setReminder = async (parent, args, context) => {
             //find the note by note id and updating the reminder field
             var reminder = await noteModel.findOneAndUpdate({ _id: args.noteID }, { $set: { reminder: date } })
             if (!reminder) {
-                return { "message": "error while setting the reminder" }
+                return { "message": "error while setting the reminder","success" : false }
+                
             }
-            return { "message": "reminder set @ " + args.date }
+            return { "message": "reminder set @ " + args.date ,"success" : true}
         }
     }
     catch (err) {
@@ -290,9 +313,9 @@ allNotes.prototype.deleteReminder = async (parent, args, context) => {
         //find the note by note id and removing the reminder field
         var reminder = await noteModel.findOneAndRemove({ _id: args.noteID }, { reminder })
         if (!reminder) {
-            return { "message": "error while deleting the reminder" }
+            return { "message": "error while deleting the reminder","success" : false }
         }
-        return { "message": "reminder deleted " }
+        return { "message": "reminder deleted ","success" : true }
     }
     catch (err) {
         console.log("ERROR", err);

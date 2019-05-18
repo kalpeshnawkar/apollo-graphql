@@ -67,12 +67,12 @@ exports.createBranch = async (parent, args, context) => {
 exports.deleteBranch = async (parent, args, context) => {
     try {
         if (context.token) {
-            // console.log(context.token);
-            // const payload = jwt.verify(context.token,process.env.SECRET)
-            // var user = userModel.find({"_id" : payload.userID })
-            // const gitToken = user.gitToken;
-            // console.log(user.gitToken);
-            const gitToken = context.token;
+            console.log(context.token);
+            const payload = jwt.verify(context.token,process.env.SECRET)
+            var user = userModel.find({"_id" : payload.userID })
+            const gitToken = user[0].gitToken;
+            console.log(user[0].gitToken);
+            
             //using axios to delete a branch by giving the name of the branch
             await axios({
                 method: "delete",

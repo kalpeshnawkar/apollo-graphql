@@ -14,9 +14,12 @@ const userModel = require('../../model/userModel');
 exports.watchRepository = async (parent, args, context) => {
     try {
         if (context.token) {
+            var payload = await jwt.verify(context.token,process.env.secret);
+            var user = await userModel.find({_id : payload.userID});
+            var gitToken = user[0].gitToken
             var watchers = await axios({
                 method: "PUT",
-                url: `https://api.github.com/user/subscriptions/${args.user}/${args.repositoryName}?access_token=${context.token}`,
+                url: `https://api.github.com/user/subscriptions/${args.user}/${args.repositoryName}?access_token=${gitToken}`,
                 headers: {
                     accept: 'application/json'
                 }
@@ -40,9 +43,12 @@ exports.watchRepository = async (parent, args, context) => {
 exports.unwatchRepository = async (parent, args, context) => {
     try {
         if (context.token) {
+            var payload = await jwt.verify(context.token,process.env.secret);
+            var user = await userModel.find({_id : payload.userID});
+            var gitToken = user[0].gitToken
             var watchers = await axios({
                 method: "DELETE",
-                url: `https://api.github.com/user/subscriptions/${args.user}/${args.repositoryName}?access_token=${context.token}`,
+                url: `https://api.github.com/user/subscriptions/${args.user}/${args.repositoryName}?access_token=${gitToken}`,
                 headers: {
                     accept: 'application/json'
                 }

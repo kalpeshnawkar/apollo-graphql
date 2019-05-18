@@ -110,3 +110,20 @@ describe('labels', () => {
             })
     });
 })
+
+describe("notes",() => {2
+    it("createNote", (done) => {
+        test("http://localhost:4000")
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({ query : test1().createNote})
+        .expect(200)
+        .end((err,res) => {
+            if(err) {
+                return done(err);
+            }
+            expect(JSON.parse(res.text).data.createNote.success).to.be.true
+            done();
+        })
+    })
+})
