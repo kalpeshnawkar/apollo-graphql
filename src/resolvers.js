@@ -31,7 +31,10 @@ const createBranch = require('../mutations/gitMutations/branch').createBranch;
 const deleteBranch = require('../mutations/gitMutations/branch').deleteBranch;
 const addStar = require('../mutations/gitMutations/star').addStar
 const removeStar = require('../mutations/gitMutations/star').removeStar
+const watchRepository = require('../mutations/gitMutations/watch').watchRepository
+const unwatchRepository = require('../mutations/gitMutations/watch').unwatchRepository
 const setColaborator = require('../mutations/colabMutations/colab').setColaborator
+
 /**
 * @description: A map of functions which return data for the schema.
 */
@@ -117,6 +120,8 @@ exports.resolvers = {
         deleteBranch,
         addStar,
         removeStar,
+        watchRepository,
+        unwatchRepository,
         setColaborator
     }
 }

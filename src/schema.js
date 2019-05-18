@@ -63,7 +63,10 @@ type Note {
     deleteBranch(user:String!,repositoryName:String!,branchName:String!):Message
     addStar(starabbleId:String,clientMutation:String):Message
     removeStar(starabbleId:String,clientMutation:String):Message
+    watchRepository(user:String!,repositoryName:String!):Message
+    unwatchRepository(user:String!,repositoryName:String!):Message
     setColaborator(noteID:String!,colabID:String!):Message
+
  }
 `;
 
