@@ -3,6 +3,7 @@
 */
 const redis = require('async-redis');
 const client = redis.createClient();
+const jwt = require('jsonwebtoken')
 const userModel = require('../model/userModel');
 const labelModel = require('../model/labelModel');
 const noteModel = require('../model/noteModel');
@@ -51,12 +52,44 @@ exports.resolvers = {
 
                 var user = await userModel.find({ "_id": args.userID })
                 // console.log(user.length);
-                return user;
+                if (user) {
+                    return user;
+                }
             }
             catch (err) {
                 console.log("ERROR", err);
             }
+        },
+
+        searchNotesByTitle: async (parent, args, context) => {
+            try {
+                var payload = jwt.verify(context.token, process.env.SECRET);
+                var searchNote = new RegExp(args.title)
+                var notes = await noteModel.find({ title: searchNote, userID: payload.userID })
+                if (notes) {
+                    return notes
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        },
+
+        searchNotesByDescription: async (parent, args, context) => {
+            try {
+                var payload = jwt.verify(context.token, process.env.SECRET);
+                var searchNote = new RegExp(args.description)
+                var notes = await noteModel.find({ description: searchNote, userID: payload.userID })
+                if (notes) {
+                    return notes
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
         }
+
+
     },
 
     /**
@@ -69,8 +102,14 @@ exports.resolvers = {
             try {
                 console.log(parent.id);
                 var labels = await client.get("labels" + parent.id)
-                console.log(labels);
-                return JSON.parse(labels);
+                if (labels) {
+                    return JSON.parse(labels);
+                }
+                else {
+                    let label =await labelModel.find({ userID: parent.id })
+                    client.set("labels" + parent.id, JSON.stringify(label));
+                    return label;
+                }
             }
             catch (err) {
                 console.log("ERROR", err);

@@ -3,7 +3,6 @@
 */
 
 const userModel = require('../../model/userModel')
-const axios = require('axios')
 const jwt = require('jsonwebtoken')
 const noteModel = require('../../model/noteModel')
 const { createApolloFetch } = require('apollo-fetch');
@@ -27,7 +26,7 @@ exports.getRepo = async (parent, args, context) => {
         });
 
         const res = await fetch({
-            query: '{repositoryOwner(login:"akshaykc27") { id login avatarUrl repositories(first:5){ nodes{ isPrivate name } } } }',
+            query: `{repositoryOwner(login:"${args.user}") { id login avatarUrl repositories(first:5){ nodes{ isPrivate name } } } }`,
         })
         //looping through all the repositories present and saving them as notes in database
         console.log("Response", res);
@@ -40,7 +39,7 @@ exports.getRepo = async (parent, args, context) => {
                     title: res.data.repositoryOwner.repositories.nodes[i].name,
                     userID: userID
                 })
-                note.save();
+                await note.save();
             }
         }
         return {

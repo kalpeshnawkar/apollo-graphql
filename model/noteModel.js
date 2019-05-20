@@ -20,7 +20,7 @@ var noteSchema = new schema({  // defining the mongodb schema
     },
     title: {
         type: String,
-        required: true
+        required: [true,'title is mandatory']
     },
     description: {
         type: String,

@@ -31,10 +31,13 @@ type Note {
     _id : ID!
     title : String!
     description : String! 
+    message : String!
 }
  
  type Query {
-     users(userID:String, first:Int, skip:Int):[User]  
+     users(userID:String, first:Int, skip:Int):[User],
+     searchNotesByTitle(title:String!):[Note],
+     searchNotesByDescription(description:String!):[Note]
  }
 
  type Mutation{
@@ -55,7 +58,7 @@ type Note {
     verifyOauth:Message
     isArchive(noteID:String!):Message
     isTrash(noteID:String!):Message
-    getRepo:Message
+    getRepo(user:String!):Message
     setReminder(noteID:String!,date:String!):Message
     deleteReminder(noteID:String!):Message
     imageUpload:Message
@@ -66,7 +69,6 @@ type Note {
     watchRepository(user:String!,repositoryName:String!):Message
     unwatchRepository(user:String!,repositoryName:String!):Message
     setColaborator(noteID:String!,colabID:String!):Message
-
  }
 `;
 

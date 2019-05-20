@@ -12,7 +12,7 @@ var schema = mongoose.Schema;
 var labelSchema = new schema({
     labelName: {
         type: String,
-        required: true
+        required: [true,'labelName is mandatory']
     },
     userID: {
         type: schema.Types.ObjectId,

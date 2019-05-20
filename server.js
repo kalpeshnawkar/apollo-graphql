@@ -5,7 +5,7 @@
 require('dotenv').config();
 //const { ApolloServer } = require('apollo-server');
 const redis = require('async-redis');
-const client = redis.createClient()
+client = redis.createClient()
 
 const { ApolloServer } = require('apollo-server-express');
 const express = require('express')

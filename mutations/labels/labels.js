@@ -9,6 +9,7 @@
 const labelModel = require('../../model/labelModel');
 const jwt = require('jsonwebtoken');
 
+
 /**
  * @description: Mutation to create a label
  * @purpose : to create a label for the specified user
@@ -32,6 +33,7 @@ exports.createLabel =
                 userID: payload.userID
             })
             labelSave = await newLabel.save();
+            await client.del("label"+payload.userID);
             if (labelSave) {
                 return {
                     "message": "label added",
@@ -70,6 +72,7 @@ exports.removeLabel =
             //find the label by id and deleting it
             console.log(args.labelID)
             const label = await labelModel.findByIdAndRemove({ "_id": args.labelID });
+            await client.del("label"+payload.userID);
             if (!label) {
                 return {
                     "message": "enter a valid label name",
@@ -105,6 +108,7 @@ exports.updateLabel =
             console.log(payload.userID)
             //finding the label by id and setting the new label name
             var label = await labelModel.findOneAndUpdate({ "userID": payload.userID, "_id": args.labelID }, { $set: { labelName: args.newLabelName } })
+            await client.del("label"+payload.userID);
             console.log(label)
             if (label) {
                 return {

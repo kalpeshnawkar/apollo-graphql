@@ -15,8 +15,8 @@ const userModel = require('../../model/userModel');
 exports.createBranch = async (parent, args, context) => {
     if (context.token) {
         console.log(context.token);
-        const payload = jwt.verify(context.token,process.env.SECRET)
-        var user = userModel.find({"_id" : payload.userID })
+        const payload = await jwt.verify(context.token,process.env.SECRET)
+        var user =await userModel.find({"_id" : payload.userID })
         const gitToken = user.gitToken;
         console.log(user.gitToken);
         //using axios to get the details about the particular repository like sha 
