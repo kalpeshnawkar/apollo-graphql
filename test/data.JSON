@@ -3,6 +3,10 @@
     "login": "mutation  {login(email:\"akshaykc27@gmail.com\",password:\"123456789\") {message token success} }",
     "createLabel": "mutation {createLabel(labelName: \"yooooo\") {message success}}",
     "removeLabel": "mutation {removeLabel(labelID: \"5cdd46ffcf434047c21beea8\") {message success}}",
-    "updateLabel" : "mutation {updateLabel(labelID: \"5cdd46ffcf434047c21beea8\",newLabelName : \"yo boys\") {message success}}",
-    "createNote" : "mutation {createNote(title :\"abasdc\",description : \"accdd\" ){message success}}"
+    "updateLabel": "mutation {updateLabel(labelID: \"5cdd46ffcf434047c21beea8\",newLabelName : \"yo boys\") {message success}}",
+    "createNote": "mutation {createNote(title :\"abasdc\",description : \"accdd\" ){message success}}",
+    "updateNote": "mutation {updateNote(noteID:\"5cdfd600cae1eb2ba4d66792\",newTitle:\"hiiiiii\",newDescription:\"byeeeee\"){message success}}",
+    "deleteNote": "mutation {deleteNote(noteID:\"5cdfd600cae1eb2ba4d66792\"){message success}}",
+    "addLabelNote" : "mutation {addLabelNote(labelID:\"5cdfd40727021a299a111da0\",noteID:\"5cdfd600cae1eb2ba4d66792\"){message success}}",
+    "removeLabelNote" : "mutation {removeLabelNote(labelID:\"5cdfd40727021a299a111da0\",noteID:\"5cdfd600cae1eb2ba4d66792\"){message success}}"
 }

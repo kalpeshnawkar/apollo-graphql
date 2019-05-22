@@ -13,7 +13,7 @@ function test1() {
 
 describe('Register and Login', () => {
     it("register", (done) => {
-        test("http://localhost:4000")
+        test(process.env.URL)
             .post('/graphql')
             .send({ query: test1().register })
             .expect(200)
@@ -29,7 +29,7 @@ describe('Register and Login', () => {
     })
 
     it('login', (done) => {
-        test("http://localhost:4000")
+        test(process.env.URL)
             .post('/graphql')
             .send({ query: test1().login })
             .expect(200)
@@ -48,7 +48,7 @@ describe('Register and Login', () => {
 
 describe('labels', () => {
     it('login', (done) => {
-        test("http://localhost:4000")
+        test(process.env.URL)
             .post('/graphql')
             .send({ query: test1().login })
             .expect(200)
@@ -67,7 +67,7 @@ describe('labels', () => {
             })
     });
     it('createLabel', (done) => {
-        test("http://localhost:4000")
+        test(process.env.URL)
             .post('/graphql')
             .query({"token":access_token})
             .send({ query: test1().createLabel })
@@ -81,7 +81,7 @@ describe('labels', () => {
             })
     });
     it('updateLabel', (done) => {
-        test("http://localhost:4000")
+        test(process.env.URL)
             .post('/graphql')
             .query({"token":access_token})
             .send({ query: test1().updateLabel })
@@ -95,7 +95,7 @@ describe('labels', () => {
             })
     });
     it('removeLabel', (done) => {
-        test("http://localhost:4000")
+        test(process.env.URL)
             .post('/graphql')
             .query({"token":access_token})
             .send({ query: test1().removeLabel })
@@ -110,9 +110,9 @@ describe('labels', () => {
     });
 })
 
-describe("notes",() => {2
+describe("notes",() => {
     it("createNote", (done) => {
-        test("http://localhost:4000")
+        test(process.env.URL)
         .post('/graphql')
         .query({"token":access_token})
         .send({ query : test1().createNote})
@@ -122,6 +122,66 @@ describe("notes",() => {2
                 return done(err);
             }
             expect(JSON.parse(res.text).data.createNote.success).to.be.true
+            done();
+        })
+    })
+
+    it("updateNote", (done) => {
+        test(process.env.URL)
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({ query : test1().updateNote})
+        .expect(200)
+        .end((err,res) => {
+            if(err) {
+                return done(err);
+            }
+            expect(JSON.parse(res.text).data.updateNote.success).to.be.true
+            done();
+        })
+    })
+
+    it("deleteNote", (done) => {
+        test(process.env.URL)
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({ query : test1().deleteNote})
+        .expect(200)
+        .end((err,res) => {
+            if(err) {
+                return done(err);
+            }
+            expect(JSON.parse(res.text).data.deleteNote.success).to.be.true
+            done();
+        })
+    })
+
+    it("addLabelNote", (done) => {
+        test(process.env.URL)
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({ query : test1().addLabelNote})
+        .expect(200)
+        .end((err,res) => {
+            if(err) {
+                return done(err);
+            }
+            expect(JSON.parse(res.text).data.addLabelNote.success).to.be.true
+            done();
+        })
+    })
+
+    it("removeLabelNote", (done) => {
+        test(process.env.URL)
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({ query : test1().removeLabelNote})
+        .expect(200)
+        .end((err,res) => {
+            if(err) {
+                return done(err);
+            }
+            expect(JSON.parse(res.text).data.removeLabelNote.success).to.be.true
             done();
         })
     })
