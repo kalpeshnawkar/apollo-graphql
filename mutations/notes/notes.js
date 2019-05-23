@@ -20,50 +20,55 @@ function allNotes() {
 
 allNotes.prototype.createNote = async (parent, args, context) => {
     try {
-        //validations for the title and description
-        if (args.title.length < 3) {
-            return {
-                "message": "title should be minimum of 3 characters",
-                "success": false
+        if (context.token) {
+            //validations for the title and description
+            if (args.title.length < 3) {
+                return {
+                    "message": "title should be minimum of 3 characters",
+                    "success": false
+                }
+            }
+            if (args.description.length < 3) {
+                return {
+                    "message": "description should be minimum of 3 characters",
+                    "success": false
+                }
+            }
+            //verifying the token and to get the user ID 
+            var payload = await jwt.verify(context.token, process.env.SECRET);
+            console.log(payload.userID)
+            //checking if the title already exists in the database
+            var note = await noteModel.find({ "title": args.title });
+            if (note.length > 0) {
+                return {
+                    "message": "title already exists",
+                    "success": "false"
+                }
+            }
+            //save the note if not present
+            var newNote = new noteModel({
+                labelID: args.labelID,
+                userID: payload.userID,
+                title: args.title,
+                description: args.description,
+            })
+            var noteSave = newNote.save();
+            if (noteSave) {
+                return {
+                    "message": "note added",
+                    "success": true
+                }
+            }
+            else {
+                return {
+                    "message": "error while saving note",
+                    "success": false
+                }
             }
         }
-        if (args.description.length < 3) {
-            return {
-                "message": "description should be minimum of 3 characters",
-                "success": false
-            }
-        }
-        //verifying the token and to get the user ID 
-        var payload = await jwt.verify(context.token, process.env.SECRET);
-        console.log(payload.userID)
-        //checking if the title already exists in the database
-        var note = await noteModel.find({ "title": args.title });
-        if (note.length > 0) {
-            return {
-                "message": "title already exists",
-                "success": "false"
-            }
-        }
-        //save the note if not present
-        var newNote = new noteModel({
-            labelID: args.labelID,
-            userID: payload.userID,
-            title: args.title,
-            description: args.description,
-
-        })
-        var noteSave = newNote.save();
-        if (noteSave) {
-            return {
-                "message": "note added",
-                "success": true
-            }
-        }
-        else {
-            return {
-                "message": "error while saving note",
-                "success": false
-            }
+        return {
+            "message": "token not provided",
+            "success": false
         }
     } catch (err) {
         console.log("ERROR: " + err);
@@ -80,32 +85,37 @@ allNotes.prototype.createNote = async (parent, args, context) => {
 
 allNotes.prototype.updateNote = async (parent, args, context) => {
     try {
-        //checking if the title is present in th database
-        var valid = await noteModel.find({ "title": args.newTitle })
-        if (valid) {
-            return {
-                "message": "title already exists",
-                "success": false
+        if (context.token) {
+            //checking if the title is present in th database
+            var valid = await noteModel.find({ "title": args.newTitle, userID: payload.userID })
+            if (valid) {
+                return {
+                    "message": "title already exists",
+                    "success": false
+                }
+            }
+            var payload = await jwt.verify(context.token, process.env.SECRET);
+            //finding the note by note id and updating the title and description fields
+            var note = await noteModel.findOneAndUpdate({ "_id": args.noteID, userID: payload.userID },
+                { $set: { title: args.newTitle, description: args.newDescription } })
+            if (note) {
+                return {
+                    "message": "note updated successfully",
+                    "success": true
+                }
+            }
+            else {
+                return {
+                    "message": "error while updating the note name",
+                    "success": false
+                }
             }
         }
-        var payload = await jwt.verify(context.token, process.env.SECRET);
-        //finding the note by note id and updating the title and description fields
-        var note = await noteModel.findOneAndUpdate({ "_id": args.noteID , userID : payload.userID},
-            { $set: { title: args.newTitle, description: args.newDescription } })
-        if (note) {
-            return {
-                "message": "note updated successfully",
-                "success": true
-            }
+        return {
+            "message": "token not provided",
+            "success": false
         }
-        else {
-            return {
-                "message": "error while updating the note name",
-                "success": false
-            }
-        }
-    }
-    catch (err) {
+    } catch (err) {
         console.log("ERROR: " + err);
         return {
             "message": err,
@@ -121,23 +131,28 @@ allNotes.prototype.updateNote = async (parent, args, context) => {
 
 allNotes.prototype.removeNote = async (parent, args, context) => {
     try {
-        // console.log(payload.userID)
-        //finding the note by note id and deleting the note
-        var note = await noteModel.findByIdAndRemove({ "_id": args.noteID, "title": args.title });
-        if (!note) {
-            return {
-                "message": "enter a valid title name",
-                "success": false
+        if (context.token) {
+            // console.log(payload.userID)
+            //finding the note by note id and deleting the note
+            var note = await noteModel.findByIdAndRemove({ "_id": args.noteID, "title": args.title });
+            if (!note) {
+                return {
+                    "message": "enter a valid title name",
+                    "success": false
+                }
+            }
+            else {
+                return {
+                    "message": "note removed successfully",
+                    "success": true
+                }
             }
         }
-        else {
-            return {
-                "message": "note removed successfully",
-                "success": true
-            }
+        return {
+            "message": "token not provided",
+            "success": false
         }
-    }
-    catch (err) {
+    } catch (err) {
         console.log("ERROR: " + err);
         return {
             "message": err,
@@ -153,30 +168,35 @@ allNotes.prototype.removeNote = async (parent, args, context) => {
 
 allNotes.prototype.addLabelNote = async (parent, args, context) => {
     try {
-        //checking whether the label is already linked to a particular note
-        var valid = await noteModel.find({ "labelID": args.labelID })
-        if (valid.length > 0) {
-            return {
-                "message": "id already exists",
-                "success": false
+        if (context.token) {
+            //checking whether the label is already linked to a particular note
+            var valid = await noteModel.find({ "labelID": args.labelID })
+            if (valid.length > 0) {
+                return {
+                    "message": "id already exists",
+                    "success": false
+                }
+            }
+            //updating the note model with the new label id
+            var note = await noteModel.findOneAndUpdate({ "_id": args.noteID },
+                { $push: { "labelID": args.labelID } })
+            if (note) {
+                return {
+                    "message": "note updated successfully",
+                    "success": true
+                }
+            }
+            else {
+                return {
+                    "message": "error while updating the note name",
+                    "success": false
+                }
             }
         }
-        //updating the note model with the new label id
-        var note = await noteModel.findOneAndUpdate({ "_id": args.noteID },
-            { $push: { "labelID": args.labelID } })
-        if (note) {
-            return {
-                "message": "note updated successfully",
-                "success": true
-            }
+        return {
+            "message": "token not provided",
+            "success": false
         }
-        else {
-            return {
-                "message": "error while updating the note name",
-                "success": false
-            }
-        }
-
     }
     catch (err) {
         console.log("ERROR: " + err);
@@ -193,6 +213,7 @@ allNotes.prototype.addLabelNote = async (parent, args, context) => {
 
 allNotes.prototype.removeLabelNote = async (parent, args, context) => {
     try {
+        if(context.token) {
         //checking whether the label is already linked to a particular note to delete it
         var valid = await noteModel.find({ "labelID": args.labelID })
         if (!valid.length > 0) {
@@ -216,6 +237,11 @@ allNotes.prototype.removeLabelNote = async (parent, args, context) => {
                 "success": false
             }
         }
+    }
+    return {
+        "message": "token not provided",
+        "success": false
+    }
     }
     catch (err) {
         console.log("ERROR: " + err);

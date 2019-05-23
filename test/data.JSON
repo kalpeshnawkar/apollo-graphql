@@ -4,9 +4,14 @@
     "createLabel": "mutation {createLabel(labelName: \"yooooo\") {message success}}",
     "removeLabel": "mutation {removeLabel(labelID: \"5cdd46ffcf434047c21beea8\") {message success}}",
     "updateLabel": "mutation {updateLabel(labelID: \"5cdd46ffcf434047c21beea8\",newLabelName : \"yo boys\") {message success}}",
-    "createNote": "mutation {createNote(title :\"abasdc\",description : \"accdd\" ){message success}}",
-    "updateNote": "mutation {updateNote(noteID:\"5cdfd600cae1eb2ba4d66792\",newTitle:\"hiiiiii\",newDescription:\"byeeeee\"){message success}}",
-    "deleteNote": "mutation {deleteNote(noteID:\"5cdfd600cae1eb2ba4d66792\"){message success}}",
+    "createNote": "mutation {createNote(title :\"abasdaaaac\",description : \"accaadd\" ){message success}}",
+    "updateNote": "mutation {updateNote(noteID:\"5cdfd600cae1eb2ba4d66792\",newTitle:\"h\",newDescription:\"byeeeee\"){message success}}",
+    "removeNote": "mutation {removeNote(noteID:\"5ce6414a3d9a5e345fe0d25c\"){message success}}",
     "addLabelNote" : "mutation {addLabelNote(labelID:\"5cdfd40727021a299a111da0\",noteID:\"5cdfd600cae1eb2ba4d66792\"){message success}}",
-    "removeLabelNote" : "mutation {removeLabelNote(labelID:\"5cdfd40727021a299a111da0\",noteID:\"5cdfd600cae1eb2ba4d66792\"){message success}}"
+    "removeLabelNote" : "mutation {removeLabelNote(labelID:\"5cdfd40727021a299a111da0\",noteID:\"5cdfd600cae1eb2ba4d66792\"){message success}}",
+    "isArchive": "mutation {isArchive(noteID:\"5ce642a1875ca335ecc8daa4\"){message success}}",
+    "isTrash": "mutation {isTrash(noteID:\"5ce642a1875ca335ecc8daa4\"){message success}}",
+    "setReminder": "mutation {setReminder(noteID:\"5ce642a1875ca335ecc8daa4\",date:\"07-27-1996 00:00:25\"){message success}}",
+    "deleteReminder": "mutation {deleteReminder(noteID:\"5ce642a1875ca335ecc8daa4\"){message success}}"
+
 }

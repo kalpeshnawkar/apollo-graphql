@@ -35,6 +35,7 @@ const removeStar = require('../mutations/gitMutations/star').removeStar
 const watchRepository = require('../mutations/gitMutations/watch').watchRepository
 const unwatchRepository = require('../mutations/gitMutations/watch').unwatchRepository
 const setColaborator = require('../mutations/colabMutations/colab').setColaborator
+const deleteColaborator = require('../mutations/colabMutations/colab').deleteColaborator
 
 /**
 * @description: A map of functions which return data for the schema.
@@ -49,39 +50,60 @@ exports.resolvers = {
     Query: {
         users: async (parent, args) => {
             try {
-
                 var user = await userModel.find({ "_id": args.userID })
                 // console.log(user.length);
-                if (user) {
+                if (user.length > 0) {
                     return user;
+                }
+                else {
+                    return { "message": "no user found" }
                 }
             }
             catch (err) {
                 console.log("ERROR", err);
+                return { "message":"something went wrong"}
             }
         },
 
+    /**
+     * @description : query for searching the notes based on title 
+     */
+
         searchNotesByTitle: async (parent, args, context) => {
             try {
-                var payload = jwt.verify(context.token, process.env.SECRET);
-                var searchNote = new RegExp(args.title)
-                var notes = await noteModel.find({ title: searchNote, userID: payload.userID })
-                if (notes) {
-                    return notes
+                if (!context.token) {
+                    return { "message": "token not provided" }
                 }
+                var payload =await jwt.verify(context.token, process.env.SECRET);
+                var searchNote = new RegExp(args.title);
+                var notes = await noteModel.find({ title: searchNote, userID: payload.userID })
+                if (!notes.length > 0) {
+                    return { "message": `no notes with ${args.title}` }
+                }
+                return notes;
             }
             catch (err) {
                 console.log(err);
             }
         },
 
+    /**
+     * @description : query for searching the notes based on description 
+     */
+
         searchNotesByDescription: async (parent, args, context) => {
             try {
-                var payload = jwt.verify(context.token, process.env.SECRET);
+                if (!context.token) {
+                    return { "message": "token not provided" }
+                }
+                var payload = await jwt.verify(context.token, process.env.SECRET);
                 var searchNote = new RegExp(args.description)
                 var notes = await noteModel.find({ description: searchNote, userID: payload.userID })
-                if (notes) {
+                if (notes.length > 0) {
                     return notes
+                }
+                else {
+                    return { "message": `no notes with ${args.description}` }
                 }
             }
             catch (err) {
@@ -106,7 +128,7 @@ exports.resolvers = {
                     return JSON.parse(labels);
                 }
                 else {
-                    let label =await labelModel.find({ userID: parent.id })
+                    let label = await labelModel.find({ userID: parent.id })
                     client.set("labels" + parent.id, JSON.stringify(label));
                     return label;
                 }
@@ -161,7 +183,8 @@ exports.resolvers = {
         removeStar,
         watchRepository,
         unwatchRepository,
-        setColaborator
+        setColaborator,
+        deleteColaborator
     }
 }
 

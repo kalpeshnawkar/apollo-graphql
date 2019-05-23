@@ -131,27 +131,27 @@ describe("notes",() => {
         .post('/graphql')
         .query({"token":access_token})
         .send({ query : test1().updateNote})
-        .expect(200)
+        .expect(400)
         .end((err,res) => {
             if(err) {
                 return done(err);
             }
-            expect(JSON.parse(res.text).data.updateNote.success).to.be.true
+            expect(JSON.parse(res.text).data.updateNote.success).to.be.false
             done();
         })
     })
 
-    it("deleteNote", (done) => {
+    it("removeNote", (done) => {
         test(process.env.URL)
         .post('/graphql')
         .query({"token":access_token})
-        .send({ query : test1().deleteNote})
-        .expect(200)
+        .send({ query : test1().removeNote})
+        .expect(400)
         .end((err,res) => {
             if(err) {
                 return done(err);
             }
-            expect(JSON.parse(res.text).data.deleteNote.success).to.be.true
+            expect(JSON.parse(res.text).data.removeNote.success).to.be.false
             done();
         })
     })
@@ -185,4 +185,69 @@ describe("notes",() => {
             done();
         })
     })
+
+    it("isArchive", done => {
+        test(process.env.URL)
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({query :test1().isArchive})
+        .expect(200)
+        .end((err,res) => {
+            if(err)
+            {
+                return done(err)
+            }
+            expect(JSON.parse(res.text).data.isArchive.success).to.be.true
+            done();
+        })
+    })
+
+    it("isTrash", done => {
+        test(process.env.URL)
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({query :test1().isTrash})
+        .expect(200)
+        .end((err,res) => {
+            if(err)
+            {
+                return done(err)
+            }
+            expect(JSON.parse(res.text).data.isTrash.success).to.be.true
+            done();
+        })
+    })
+
+    it("setReminder", done => {
+        test(process.env.URL)
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({query :test1().setReminder})
+        .expect(200)
+        .end((err,res) => {
+            if(err)
+            {
+                return done(err)
+            }
+            expect(JSON.parse(res.text).data.setReminder.success).to.be.true
+            done();
+        })
+    })
+
+    it("deleteReminder", done => {
+        test(process.env.URL)
+        .post('/graphql')
+        .query({"token":access_token})
+        .send({query :test1().deleteReminder})
+        .expect(200)
+        .end((err,res) => {
+            if(err)
+            {
+                return done(err)
+            }
+            expect(JSON.parse(res.text).data.deleteReminder.success).to.be.true
+            done();
+        })
+    })
 })
+

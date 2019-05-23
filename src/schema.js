@@ -69,6 +69,7 @@ type Note {
     watchRepository(user:String!,repositoryName:String!):Message
     unwatchRepository(user:String!,repositoryName:String!):Message
     setColaborator(noteID:String!,colabID:String!):Message
+    deleteColaborator(noteID:String!,colabID:String!):Message
  }
 `;
 
