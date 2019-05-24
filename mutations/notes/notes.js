@@ -155,7 +155,7 @@ allNotes.prototype.removeNote = async (parent, args, context) => {
     } catch (err) {
         console.log("ERROR: " + err);
         return {
-            "message": err,
+            "message": `something went wrong`,
             "success": false
         }
     }
@@ -201,7 +201,8 @@ allNotes.prototype.addLabelNote = async (parent, args, context) => {
     catch (err) {
         console.log("ERROR: " + err);
         return {
-            "message": err
+            "message": `something went wrong`,
+            "success": false
         }
     }
 }
@@ -246,7 +247,8 @@ allNotes.prototype.removeLabelNote = async (parent, args, context) => {
     catch (err) {
         console.log("ERROR: " + err);
         return {
-            "message": err
+            "message": `something went wrong`,
+            "success": false
         }
     }
 }
@@ -277,6 +279,10 @@ allNotes.prototype.isArchive = async (parent, args, context) => {
     }
     catch (err) {
         console.log("ERROR", err);
+        return {
+            "message": `something went wrong`,
+            "success": false
+        }
     }
 }
 
@@ -304,6 +310,10 @@ allNotes.prototype.isTrash = async (parent, args, context) => {
     }
     catch (err) {
         console.log("ERROR", err);
+        return {
+            "message": `something went wrong`,
+            "success": false
+        }
     }
 }
 
@@ -327,6 +337,10 @@ allNotes.prototype.setReminder = async (parent, args, context) => {
     }
     catch (err) {
         console.log("ERROR", err);
+        return {
+            "message": `something went wrong`,
+            "success": false
+        }
     }
 }
 
@@ -345,6 +359,10 @@ allNotes.prototype.deleteReminder = async (parent, args, context) => {
     }
     catch (err) {
         console.log("ERROR", err);
+        return {
+            "message": `something went wrong`,
+            "success": false
+        }
     }
 }
 module.exports = new allNotes;

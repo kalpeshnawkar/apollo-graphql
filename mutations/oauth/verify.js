@@ -45,7 +45,9 @@ exports.verifyOauth = async (parent, args, context) => {
     }
     catch (err) {
         console.log("ERROR", err);
-
+        return {
+            "message": `something went wrong`
+        }
     }
 
 }

@@ -84,6 +84,10 @@ exports.resolvers = {
             }
             catch (err) {
                 console.log(err);
+                return {
+                    "message": `something went wrong`,
+                    "success": false
+                }
             }
         },
 
@@ -108,6 +112,10 @@ exports.resolvers = {
             }
             catch (err) {
                 console.log(err);
+                return {
+                    "message": `something went wrong`,
+                    "success": false
+                }
             }
         }
 
@@ -135,6 +143,10 @@ exports.resolvers = {
             }
             catch (err) {
                 console.log("ERROR", err);
+                return {
+                    "message": `something went wrong`,
+                    "success": false
+                }
 
             }
         },
@@ -150,6 +162,10 @@ exports.resolvers = {
             }
             catch (err) {
                 console.log("ERROR", err);
+                return {
+                    "message": `something went wrong`,
+                    "success": false
+                }
 
             }
         }

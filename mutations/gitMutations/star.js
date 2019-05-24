@@ -30,6 +30,10 @@ exports.addStar = async (parent, args, context) => {
         }
     }catch(err) {
         console.log("ERROR", err);
+        return {
+            "message": `something went wrong`,
+            "success": false
+        }
     }
 }
 
@@ -60,5 +64,9 @@ exports.removeStar = async (parent, args, context) => {
         }
     }catch(err) {
         console.log("ERROR", err);
+        return {
+            "message": `something went wrong`,
+            "success": false
+        }
     }
 }
