@@ -11,6 +11,9 @@ function colab() {
 
 colab.prototype.setColaborator = async (parent, args, context) => {
     try {
+        if (!context.token) {
+            return { "message": "token not provided" }
+        }
         var payload = jwt.verify(context.token, process.env.SECRET)
         var user = await userModel.find({ _id: payload.userID })
         if (!user.length > 0) {
@@ -58,6 +61,9 @@ colab.prototype.setColaborator = async (parent, args, context) => {
 
 colab.prototype.deleteColaborator = async (parent, args, context) => {
     try {
+        if (!context.token) {
+            return { "message": "token not provided" }
+        }
         var payload = jwt.verify(context.token, process.env.SECRET)
         var user = await userModel.find({ _id: payload.userID })
         if (!user.length > 0) {

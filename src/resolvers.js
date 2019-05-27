@@ -61,21 +61,71 @@ exports.resolvers = {
             }
             catch (err) {
                 console.log("ERROR", err);
-                return { "message":"something went wrong"}
+                return { "message": "something went wrong" }
             }
         },
 
-    /**
-     * @description : query for searching the notes based on title 
-     */
+        /**
+        * @description : query for finding the details about a particular user by the userID and  
+        *                also the labels and notes related to that particular user.
+        */
+
+        User: {
+            labels: async (parent) => {
+                try {
+                    console.log(parent.id);
+                    var labels = await client.get("labels" + parent.id)
+                    if (labels) {
+                        return JSON.parse(labels);
+                    }
+                    else {
+                        let label = await labelModel.find({ userID: parent.id })
+                        client.set("labels" + parent.id, JSON.stringify(label));
+                        return label;
+                    }
+                }
+                catch (err) {
+                    console.log("ERROR", err);
+                    return {
+                        "message": `something went wrong`,
+                        "success": false
+                    }
+
+                }
+            },
+            notes: async (parent) => {
+                try {
+                    var note = await noteModel.find({ userID: parent.id }).exec()
+                    if (!note) {
+                        return {
+                            "message": "NO notes fouund"
+                        }
+                    }
+                    return note;
+                }
+                catch (err) {
+                    console.log("ERROR", err);
+                    return {
+                        "message": `something went wrong`,
+                        "success": false
+                    }
+
+                }
+            }
+        },
+
+        /**
+         * @description : query for searching the notes based on title 
+         */
 
         searchNotesByTitle: async (parent, args, context) => {
             try {
                 if (!context.token) {
                     return { "message": "token not provided" }
                 }
-                var payload =await jwt.verify(context.token, process.env.SECRET);
+                var payload = await jwt.verify(context.token, process.env.SECRET);
                 var searchNote = new RegExp(args.title);
+                console.log(searchNote);
                 var notes = await noteModel.find({ title: searchNote, userID: payload.userID })
                 if (!notes.length > 0) {
                     return { "message": `no notes with ${args.title}` }
@@ -91,9 +141,9 @@ exports.resolvers = {
             }
         },
 
-    /**
-     * @description : query for searching the notes based on description 
-     */
+        /**
+         * @description : query for searching the notes based on description 
+         */
 
         searchNotesByDescription: async (parent, args, context) => {
             try {
@@ -120,55 +170,6 @@ exports.resolvers = {
         }
 
 
-    },
-
-    /**
-     * @description : query for finding the details about a particular user by the userID and  
-    *                 also the labels and notes related to that particular user.
-     */
-
-    User: {
-        labels: async (parent) => {
-            try {
-                console.log(parent.id);
-                var labels = await client.get("labels" + parent.id)
-                if (labels) {
-                    return JSON.parse(labels);
-                }
-                else {
-                    let label = await labelModel.find({ userID: parent.id })
-                    client.set("labels" + parent.id, JSON.stringify(label));
-                    return label;
-                }
-            }
-            catch (err) {
-                console.log("ERROR", err);
-                return {
-                    "message": `something went wrong`,
-                    "success": false
-                }
-
-            }
-        },
-        notes: async (parent) => {
-            try {
-                var note = await noteModel.find({ userID: parent.id }).exec()
-                if (!note) {
-                    return {
-                        "message": "NO notes fouund"
-                    }
-                }
-                return note;
-            }
-            catch (err) {
-                console.log("ERROR", err);
-                return {
-                    "message": `something went wrong`,
-                    "success": false
-                }
-
-            }
-        }
     },
 
     Mutation: {
