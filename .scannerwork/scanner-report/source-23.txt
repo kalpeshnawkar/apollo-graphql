@@ -91,7 +91,8 @@ exports.deleteBranch = async (parent, args, context) => {
     }
     catch (err) {
         return {
-            "message": err
+            "message": `something went wrong`,
+            "success": false
         }
     }
 }

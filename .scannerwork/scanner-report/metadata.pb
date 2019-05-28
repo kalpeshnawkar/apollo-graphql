@@ -1,4 +1,4 @@
-³¦Øö­-apollo_graphql(:2
+ıÒµä¯-apollo_graphql(:2
 cs,
 AWrd2R_qBkNNMrM3zlkn	Sonar waycs ø¼äî­-:6
 java.

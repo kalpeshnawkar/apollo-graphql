@@ -1,102 +1,55 @@
-/**
-* @description: requiring the neccessary files
-*/
-
-// Import the axios library, to make HTTP request
-const axios = require('axios');
-const userModel = require('../../model/userModel');
-const jwt = require('jsonwebtoken');
-var util = require('../../util/mail');
-const clientID = process.env.CLIENT_ID
-const clientSecret = process.env.CLIENT_SECRET
-
-/**
- * @description: Mutation for social login through github
- * @purpose : for logging in using a github account through oAUth 
+/** 
+ * @desciption requiring the necessary files
  */
 
-exports.oAuth = async (parent, args, context) => {
-    try {
-        console.log("code", context.code);
-        axios({
-            // make a POST request
-            method: 'post',
-            // to the Github authentication API, with the client ID, client secret
-            // and request token
-            url: `https://github.com/login/oauth/access_token?client_id=${clientID}&client_secret=${clientSecret}&code=${context.code}`,
-            // Set the content type header, so that we get the response in JSON
-            headers: {
-                accept: 'application/json'
-            }
-        }).then((response) => {
+const userModel = require('../../model/userModel');
+const jwt = require('jsonwebtoken');
 
-            // Once we get the response, extract the access token from
-            // the response body
-            const accessToken = response.data.access_token
-            // redirect the user to the welcome page, along with the access token
-            console.log(accessToken)
-            getToken(accessToken);
-        })
+/**
+ * @description: Mutation for verfying the token and login 
+ */
+
+exports.verifyOauth = async (parent, args, context) => {
+    try {
+        var payload = await jwt.verify(context.token, "gitsecret"); //token verification
+        if (!payload) {
+            return {
+                "message": "git verification unsuccessful"
+            }
+        }
+        console.log(payload.gitUsername)
+        console.log(payload.gitID)
+        //updating the gitVerify field so that the user can login
+        var userUpdate = await userModel.updateOne({ "gitID": payload.gitID }, { $set: { "gitVerify": true } })  // finding the user for the email provided and updating the verification field in the database  
+        if (userUpdate) {
+            //finding the git user in the usermodel for logging in
+            var user = await userModel.find({ "gitID": payload.gitID, "gitUsername": payload.gitUsername })
+            if (!user) {
+                return { "message": "id not found" }
+            }
+            //checking whether the git user verifcation is successful
+            if (user[0].gitVerify === false) {
+                return {
+                    "message": "git verification unsuccessful"
+                }
+            }
+            return {
+                "message": "login successful"
+            }
+        }
+        else {
+            return {
+                "message": " user not found !!! "
+            }
+        }
     }
     catch (err) {
         console.log("ERROR", err);
-
+        return {
+            "message": `something went wrong`
+        }
     }
 
-    /**
-    * @description: to pass the git token and make another http request 
-    */
-
-    function getToken(accessToken) {
-        try {
-            axios({
-                // make a GET request
-                method: 'get',
-                // to get the code
-                url: `https://api.github.com/user?access_token=${accessToken}`,
-                // Set the content type header, so that we get the response in JSOn
-                headers: {
-                    accept: 'application/json'
-                }
-            }).then(async (response) => {
-                console.log(response.data)
-
-                //saving the git user details in the database 
-                var gitUser = new userModel({
-                    gitUsername: response.data.login,
-                    gitID: response.data.id,
-                    firstName: "guest",
-                    lastName: "",
-                    email: "",
-                    gitToken: accessToken
-                })
-                let user = await gitUser.save();
-
-                console.log("user", user);
-
-                console.log("before token");
-                //generating token by taking the userID,gitID and git username in the payload 
-                var token = await jwt.sign({ userID: user.id, gitUsername: response.data.login, gitID: response.data.id }, process.env.SECRET);
-                console.log("after token");
-                console.log('token =>', token)
-                console.log('email =>', response.data.email)
-                var url = `http://localhost:4000/graphql?token=${token}`
-                //sending the email to the user email for logging in 
-                util.sendEmailFunction(url, response.data.email)
-            })
-            return { "message": "git authentication successful" };
-
-        }
-        catch (err) {
-            console.log("ERROR", err);
-        }
-
-
-
-    }
 }
-
-
-
 
 

@@ -67,7 +67,8 @@ exports.signUp =
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err
+                "message": `something went wrong`,
+                "success": false
             }
         }
     }
@@ -130,7 +131,8 @@ exports.login =
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err
+                "message": `something went wrong`,
+                "success": false
             }
         }
     }
@@ -166,7 +168,8 @@ exports.isEmailVerify =
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err
+                "message": `something went wrong`,
+                "success": false
             }
         }
     }
@@ -197,7 +200,8 @@ exports.forgotPassword =
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err
+                "message": `something went wrong`,
+                "success": false
             }
 
         }
@@ -234,7 +238,8 @@ exports.resetPassword = async (parent, args, context) => {
     catch (err) {
         console.log("ERROR: " + err);
         return {
-            "message": err
+            "message": `something went wrong`,
+            "success": false
         }
     }
 }

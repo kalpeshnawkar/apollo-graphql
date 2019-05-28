@@ -50,8 +50,8 @@ exports.createLabel =
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err,
-                "success" : false
+                "message": `something went wrong`,
+                "success": false
             }
         }
     }
@@ -89,8 +89,8 @@ exports.removeLabel =
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err,
-                "success" : false
+                "message": `something went wrong`,
+                "success": false
             }
         }
     }
@@ -126,8 +126,8 @@ exports.updateLabel =
         catch (err) {
             console.log("ERROR: " + err);
             return {
-                "message": err,
-                "success" : false
+                "message": `something went wrong`,
+                "success": false
             }
         }
     }

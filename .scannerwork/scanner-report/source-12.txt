@@ -1,36 +1,39 @@
 /**
- * @description: requiring mongoose ORM
- */
+* @description: requiring the neccessary files
+*/
 
-const mongoose = require('mongoose')
-/**
- * @description: mongodb schema for collaborators 
- */
-const schema = mongoose.Schema;
+require('dotenv').config();
+//const { ApolloServer } = require('apollo-server');
+const redis = require('async-redis');
+client = redis.createClient()
 
-var colabSchema = new schema({
-    userID:
-    {
-        type: schema.Types.ObjectId,
-        ref: "userSchema",
-        required : [true,'userID is mandatory']
-    },
+const { ApolloServer } = require('apollo-server-express');
+const express = require('express')
+const { typeDefs } = require('./src/schema');
+const resolvers = require('./src/resolvers').resolvers
+const redis1 = require('./config/redis');
+const mongodb = require('./config/mongodb');
+const upload = require('./util/awsS3');
 
-    noteID: {
-        type: schema.Types.ObjectId,
-        ref: "noteSchema",
-        required : [true,'noteID is mandatory']
-    },
+//creating a express instance
+const app = express();
 
-    colabID: {
-        type: schema.Types.ObjectId,
-        ref: "userSchema",
-        required : [true,'colabID is mandatory']
-    }
+app.use("*", upload.single('image'))
 
-},
-    {
-        timestamps: true
+
+const server = new ApolloServer({
+    typeDefs,
+    resolvers, 
+    context: ({ req }) => ({
+        // to get the user token/code from the query
+        token: req.query.token,
+        code: req.query.code
     })
+});
 
-module.exports = mongoose.model('colab', colabSchema);
+server.applyMiddleware({ app, path: '/graphql' });
+
+// listening to port
+app.listen({ port: process.env.PORT }, () => {
+    console.log(`🚀 Server ready at ${process.env.PORT}`);
+})
