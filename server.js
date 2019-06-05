@@ -1,3 +1,15 @@
+/******************************************************************************
+* @Execution : default node : cmd> server.js
+* 
+* 
+* @Purpose : to connect to the server using apollo-graphql
+* @overview : Fundoo 
+* @author : Akshay K C <akshaykc27@gmail.com>
+* @version : 1.0
+* @since : 30-April-2019
+*
+******************************************************************************/
+
 /**
 * @description: requiring the neccessary files
 */

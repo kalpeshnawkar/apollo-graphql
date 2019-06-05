@@ -11,9 +11,7 @@ Environment variables:
   - GDK_PIXBUF_MODULE_FILE=/home/admin1/snap/vscode/common/.cache/gdk-pixbuf-loaders.cache
   - GDMSESSION=ubuntu
   - GIO_LAUNCHED_DESKTOP_FILE=/var/lib/snapd/desktop/applications/vscode_vscode.desktop
-  - GIO_LAUNCHED_DESKTOP_FILE_PID=5942
-  - GJS_DEBUG_OUTPUT=stderr
-  - GJS_DEBUG_TOPICS=JS ERROR;JS LOG
+  - GIO_LAUNCHED_DESKTOP_FILE_PID=13387
   - GNOME_DESKTOP_SESSION_ID=this-is-deprecated
   - GNOME_SHELL_SESSION_MODE=ubuntu
   - GPG_AGENT_INFO=/run/user/1000/gnupg/S.gpg-agent:0:1
@@ -37,11 +35,11 @@ Environment variables:
   - QT4_IM_MODULE=xim
   - QT_ACCESSIBILITY=1
   - QT_IM_MODULE=xim
-  - SESSION_MANAGER=local/admin1-desktop:@/tmp/.ICE-unix/3752,unix/admin1-desktop:/tmp/.ICE-unix/3752
+  - SESSION_MANAGER=local/admin1-desktop:@/tmp/.ICE-unix/4665,unix/admin1-desktop:/tmp/.ICE-unix/4665
   - SHELL=/bin/bash
   - SHLVL=2
   - SONARQUBE_SCANNER_PARAMS={}
-  - SSH_AGENT_PID=4014
+  - SSH_AGENT_PID=4760
   - SSH_AUTH_SOCK=/run/user/1000/keyring/ssh
   - TERM=xterm-256color
   - TERM_PROGRAM=vscode
@@ -136,7 +134,7 @@ SonarQube plugins:
   - SonarJS 3.2.0.5506 (javascript)
 Global properties:
   - sonar.core.id=AWrd2NUmBkNNMrM3zlKO
-  - sonar.core.startTime=2019-05-28T03:37:07+0000
+  - sonar.core.startTime=2019-06-01T04:27:29+0000
 Settings for module: apollo_graphql
   - sonar.exclusions=node_modules/**/*
   - sonar.host.url=http://localhost:9000

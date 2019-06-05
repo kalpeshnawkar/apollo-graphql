@@ -2,5 +2,5 @@ projectKey=apollo_graphql
 serverUrl=http://localhost:9000
 serverVersion=6.7.1.35068
 dashboardUrl=http://localhost:9000/dashboard/index/apollo_graphql
-ceTaskId=AWr8jYcdnhy1iSqjeXmb
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AWr8jYcdnhy1iSqjeXmb
+ceTaskId=AWsTTDuDLbzACbfdwmno
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AWsTTDuDLbzACbfdwmno

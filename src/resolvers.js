@@ -36,6 +36,7 @@ const watchRepository = require('../mutations/gitMutations/watch').watchReposito
 const unwatchRepository = require('../mutations/gitMutations/watch').unwatchRepository
 const setColaborator = require('../mutations/colabMutations/colab').setColaborator
 const deleteColaborator = require('../mutations/colabMutations/colab').deleteColaborator
+const getAllUsers = require('../mutations/gitMutations/getAllUsers').getAllUsers
 
 /**
 * @description: A map of functions which return data for the schema.
@@ -65,55 +66,7 @@ exports.resolvers = {
             }
         },
 
-        /**
-        * @description : query for finding the details about a particular user by the userID and  
-        *                also the labels and notes related to that particular user.
-        */
-
-        User: {
-            labels: async (parent) => {
-                try {
-                    console.log(parent.id);
-                    var labels = await client.get("labels" + parent.id)
-                    if (labels) {
-                        return JSON.parse(labels);
-                    }
-                    else {
-                        let label = await labelModel.find({ userID: parent.id })
-                        client.set("labels" + parent.id, JSON.stringify(label));
-                        return label;
-                    }
-                }
-                catch (err) {
-                    console.log("ERROR", err);
-                    return {
-                        "message": `something went wrong`,
-                        "success": false
-                    }
-
-                }
-            },
-            notes: async (parent) => {
-                try {
-                    var note = await noteModel.find({ userID: parent.id }).exec()
-                    if (!note) {
-                        return {
-                            "message": "NO notes fouund"
-                        }
-                    }
-                    return note;
-                }
-                catch (err) {
-                    console.log("ERROR", err);
-                    return {
-                        "message": `something went wrong`,
-                        "success": false
-                    }
-
-                }
-            }
-        },
-
+        
         /**
          * @description : query for searching the notes based on title 
          */
@@ -140,6 +93,8 @@ exports.resolvers = {
                 }
             }
         },
+
+        
 
         /**
          * @description : query for searching the notes based on description 
@@ -171,6 +126,55 @@ exports.resolvers = {
 
 
     },
+    /**
+        * @description : query for finding the details about a particular user by the userID and  
+        *                also the labels and notes related to that particular user.
+        */
+
+       User: {
+        labels: async (parent) => {
+            try {
+                console.log(parent.id);
+                var labels = await client.get("labels" + parent.id)
+                if (labels) {
+                    return JSON.parse(labels);
+                }
+                else {
+                    let label = await labelModel.find({ userID: parent.id })
+                    client.set("labels" + parent.id, JSON.stringify(label));
+                    return label;
+                }
+            }
+            catch (err) {
+                console.log("ERROR", err);
+                return {
+                    "message": `something went wrong`,
+                    "success": false
+                }
+
+            }
+        },
+        notes: async (parent) => {
+            try {
+                var note = await noteModel.find({ userID: parent.id }).exec()
+                if (!note) {
+                    return {
+                        "message": "NO notes fouund"
+                    }
+                }
+                return note;
+            }
+            catch (err) {
+                console.log("ERROR", err);
+                return {
+                    "message": `something went wrong`,
+                    "success": false
+                }
+
+            }
+        }
+    },
+
 
     Mutation: {
         signUp,
@@ -201,7 +205,8 @@ exports.resolvers = {
         watchRepository,
         unwatchRepository,
         setColaborator,
-        deleteColaborator
+        deleteColaborator,
+        getAllUsers
     }
 }
 

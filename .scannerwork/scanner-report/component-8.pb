@@ -1,1 +1,1 @@
-model/colabModel.js 2jsX$h
+model/labelModel.js 2jsXh

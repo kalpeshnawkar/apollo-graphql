@@ -20,6 +20,7 @@ type User {
      token : String 
      name : String
      success : Boolean
+     repos :[String!]!
  }
 
  type Label {
@@ -70,6 +71,7 @@ type Note {
     unwatchRepository(user:String!,repositoryName:String!):Message
     setColaborator(noteID:String!,colabID:String!):Message
     deleteColaborator(noteID:String!,colabID:String!):Message
+    getAllUsers:Message
  }
 `;
 
