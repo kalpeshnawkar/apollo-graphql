@@ -20,8 +20,34 @@ type User {
      token : String 
      name : String
      success : Boolean
-     repos :[String!]!
  }
+
+ type Repos {
+    repositoryCount : Int!
+    edges:[edges]
+}
+
+type edges {
+    node : node
+}
+
+type node {
+    name:String
+    commitComments:commitComments
+}
+
+type commitComments {
+    totalCount:Int!
+    nodes:[nodes]
+}
+
+type nodes {
+    commit : commitUrl
+}
+
+type commitUrl {
+    commitUrl:String
+}
 
  type Label {
      _id : ID!
@@ -71,7 +97,7 @@ type Note {
     unwatchRepository(user:String!,repositoryName:String!):Message
     setColaborator(noteID:String!,colabID:String!):Message
     deleteColaborator(noteID:String!,colabID:String!):Message
-    getAllUsers:Message
+    getAllUsers:Repos
  }
 `;
 
