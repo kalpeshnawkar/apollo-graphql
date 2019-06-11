@@ -37,6 +37,7 @@ const unwatchRepository = require('../mutations/gitMutations/watch').unwatchRepo
 const setColaborator = require('../mutations/colabMutations/colab').setColaborator
 const deleteColaborator = require('../mutations/colabMutations/colab').deleteColaborator
 const getAllUsers = require('../mutations/gitMutations/getAllUsers').getAllUsers
+const createIssue = require('../mutations/gitMutations/createIssue').createIssue
 
 /**
 * @description: A map of functions which return data for the schema.
@@ -206,7 +207,8 @@ exports.resolvers = {
         unwatchRepository,
         setColaborator,
         deleteColaborator,
-        getAllUsers
+        getAllUsers,
+        createIssue
     }
 }
 

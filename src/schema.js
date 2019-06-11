@@ -49,6 +49,12 @@ type commitUrl {
     commitUrl:String
 }
 
+input CreateIssueInput {
+    repositoryId : ID!
+    title : String!
+    assigneesIds : [String!]
+}
+
  type Label {
      _id : ID!
      labelName : String!
@@ -98,6 +104,7 @@ type Note {
     setColaborator(noteID:String!,colabID:String!):Message
     deleteColaborator(noteID:String!,colabID:String!):Message
     getAllUsers:Repos
+    createIssue(input:CreateIssueInput!):Message
  }
 `;
 
