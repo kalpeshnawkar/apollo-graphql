@@ -8,11 +8,12 @@
 
 const userModel = require('../../model/userModel');
 const bcrypt = require('bcrypt');
-const sendMail = require('../../util/mail').sendEmailFunction;
+const sendMail = require('../../services/mail').sendEmailFunction;
 const jwt = require('jsonwebtoken');
-const redis = require('redis');
-const client = redis.createClient();
-const labelModel = require('../../model/labelModel')
+const labelModel = require('../../model/labelModel');
+const generateToken = require('../../services/generateToken').generateToken;
+const verifyToken = require('../../services/verifyToken').verifyToken;
+
 
 /**
  * @description: Mutation for sign up
@@ -47,10 +48,11 @@ exports.signUp =
                 /*
                 generating the token and sending it to the email provided to check the authenticity of the user
                 */
-                var token = await jwt.sign({ "email": args.email }, process.env.SECRET);
+                var payload = { "email": args.email }
+                var token = await generateToken(payload);
                 client.set("registerToken"+args._id, token); // saving the token in redis cache
-                var url = `http://localhost:4000/token=${token}`;
-                sendMail(url, args.email);
+                var url = `${process.env.URL}?token=${token}`;
+                await sendMail(url, args.email);
                 return {
                     "message": "registration successful",
                     "token": token,
@@ -101,11 +103,12 @@ exports.login =
 
                 let valid = await bcrypt.compare(args.password, user[0].password); //encrypting the password
                 if (valid) {
-                    let token = await jwt.sign({ 'email': args.email, "userID": user[0]._id, "password": user[0].password }, process.env.SECRET, { expiresIn: '1d' }) //token generation
+                    var payload = { 'email': args.email, "userID": user[0]._id, "password": user[0].password };
+                    let token = await generateToken(payload); //token generation
                     var labels = await labelModel.find({userID : user[0]._id}).sort({labelName : 1});
                     //console.log(labels);
                     
-                    await client.set("labels"+user[0]._id, JSON.stringify(labels),redis.print);
+                    await client.set("labels"+user[0]._id, JSON.stringify(labels));
                     return {
                         "message": "login successful ",
                         "token": token,
@@ -147,7 +150,7 @@ exports.isEmailVerify =
         try {
             console.log("token in verify email===> ", context.token);
 
-            var payload = await jwt.verify(context.token, process.env.SECRET); //token verification
+            var payload = await verifyToken(context.token); //token verification
             if (!payload) {
                 return {
                     "message": "verification unsuccessful"
@@ -185,8 +188,9 @@ exports.forgotPassword =
             var user = await userModel.find({ 'email': args.email });  //checking if the email already exists in the database 
             console.log(user)
             if (user) {
-                var token = jwt.sign({ email: args.email }, process.env.SECRET)   //generates the token and sends to the email provided for the further process 
-                var url = `http://localhost:4000?token=${token}`;
+                var payload = { email: args.email }
+                var token = await generateToken(payload);   //generates the token and sends to the email provided for the further process 
+                var url = `${process.env.URL}?token=${token}`;
                 sendMail(url, args.email)
                 return {
                     "message": "A link to reset your password has been sent to your email",
@@ -221,7 +225,7 @@ exports.resetPassword = async (parent, args, context) => {
         }
         else {
             var encryptedPassword = bcrypt.hashSync(args.password, 10)
-            var payload = await jwt.verify(context.token, process.env.SECRET);  // token verification
+            var payload = await verifyToken(context.token);  // token verification
             var userUpdate = await userModel.updateOne({ "email": payload.email }, { $set: { "password": encryptedPassword } })  // finding the user for the email provided and updating the password in the database  
             if (userUpdate) {
                 return {

@@ -8,6 +8,7 @@
 
 const labelModel = require('../../model/labelModel');
 const jwt = require('jsonwebtoken');
+const verifyToken = require('../../services/verifyToken').verifyToken
 
 
 /**
@@ -19,7 +20,7 @@ exports.createLabel =
     async (parent, args, context) => {
         try {
             //verifying the token and to get the user ID 
-            var payload = await jwt.verify(context.token, process.env.SECRET);
+            var payload = await verifyToken(context.token);
             //checking whether the label name is already saved
             var user = await labelModel.find({ "labelName": args.labelName, "userID": payload.userID });
             if (user.length > 0) {
@@ -67,7 +68,7 @@ exports.removeLabel =
             //verifying the token and to get the user ID 
             console.log(context.token);
             
-            var payload = await jwt.verify(context.token, process.env.SECRET);
+            var payload = await verifyToken(context.token);
             // console.log(payload.userID)
             //find the label by id and deleting it
             console.log(args.labelID)
@@ -104,7 +105,7 @@ exports.updateLabel =
     async (parent, args, context) => {
         try {
             //verifying the token and to get the user ID 
-            var payload = await jwt.verify(context.token, process.env.SECRET);
+            var payload = await verifyToken(context.token);
             console.log(payload.userID)
             //finding the label by id and setting the new label name
             var label = await labelModel.findOneAndUpdate({ "userID": payload.userID, "_id": args.labelID }, { $set: { labelName: args.newLabelName } })

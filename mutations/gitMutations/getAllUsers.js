@@ -3,7 +3,8 @@
 */
 
 const { createApolloFetch } = require('apollo-fetch');
-const userModel = require('../../model/userModel')
+const userModel = require('../../model/userModel');
+const verifyToken = require('../../services/verifyToken').verifyToken
 
 /**
  * @description : to retrieve a list of all public repositories from Github and their respective latest commits
@@ -12,7 +13,8 @@ const userModel = require('../../model/userModel')
 
 exports.getAllUsers = async (parent, args, context) => {
     try {
-        var user = await userModel.find({ _id: "5cd541090c42ec2332701aa7" })
+        var payload = verifyToken(context.token)
+        var user = await userModel.find({ _id: payload.userId})
         //var accessToken = user[0].gitToken;
         var gitToken = user[0].gitToken;
         //try {

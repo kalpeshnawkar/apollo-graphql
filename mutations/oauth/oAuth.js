@@ -6,9 +6,10 @@
 const axios = require('axios');
 const userModel = require('../../model/userModel');
 const jwt = require('jsonwebtoken');
-var util = require('../../util/mail');
-const clientID = process.env.CLIENT_ID
-const clientSecret = process.env.CLIENT_SECRET
+var util = require('../../services/mail');
+const clientID = process.env.CLIENT_ID;
+const clientSecret = process.env.CLIENT_SECRET;
+const generateToken = require('../../services/generateToken').generateToken
 
 /**
  * @description: Mutation for social login through github
@@ -78,11 +79,12 @@ exports.oAuth = async (parent, args, context) => {
 
                 console.log("before token");
                 //generating token by taking the userID,gitID and git username in the payload 
-                var token = await jwt.sign({ userID: user.id, gitUsername: response.data.login, gitID: response.data.id }, process.env.SECRET);
+                var payload = { userID: user.id, gitUsername: response.data.login, gitID: response.data.id }
+                var token = await generateToken(payload);;
                 console.log("after token");
                 console.log('token =>', token)
                 console.log('email =>', response.data.email)
-                var url = `http://localhost:4000/graphql?token=${token}`
+                var url = `${process.env.URL}/graphql?token=${token}`
                 //sending the email to the user email for logging in 
                 util.sendEmailFunction(url, response.data.email)
             })

@@ -2,7 +2,8 @@ const colabModel = require('../../model/colabModel');
 const noteModel = require('../../model/noteModel');
 const userModel = require('../../model/userModel');
 const jwt = require('jsonwebtoken');
-const sendMail = require('../../util/mail').sendEmailFunction
+const sendMail = require('../../services/mail').sendEmailFunction
+const verifyToken = require('../../services/verifyToken').verifyToken
 
 
 function colab() {
@@ -14,7 +15,7 @@ colab.prototype.setColaborator = async (parent, args, context) => {
         if (!context.token) {
             return { "message": "token not provided" }
         }
-        var payload = jwt.verify(context.token, process.env.SECRET)
+        var payload = verifyToken(context.token)
         var user = await userModel.find({ _id: payload.userID })
         if (!user.length > 0) {
             return { "message": "user not found" }
@@ -64,7 +65,7 @@ colab.prototype.deleteColaborator = async (parent, args, context) => {
         if (!context.token) {
             return { "message": "token not provided" }
         }
-        var payload = jwt.verify(context.token, process.env.SECRET)
+        var payload = verifyToken(context.token)
         var user = await userModel.find({ _id: payload.userID })
         if (!user.length > 0) {
             return { "message": "user not found" }

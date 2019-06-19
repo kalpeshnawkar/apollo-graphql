@@ -4,6 +4,7 @@
 
 const userModel = require('../../model/userModel');
 const jwt = require('jsonwebtoken');
+const verifyToken = require('../../services/verifyToken').verifyToken
 
 /**
  * @description: Mutation for verfying the token and login 
@@ -11,7 +12,7 @@ const jwt = require('jsonwebtoken');
 
 exports.verifyOauth = async (parent, args, context) => {
     try {
-        var payload = await jwt.verify(context.token, "gitsecret"); //token verification
+        var payload = await verifyToken(context.token); //token verification
         if (!payload) {
             return {
                 "message": "git verification unsuccessful"

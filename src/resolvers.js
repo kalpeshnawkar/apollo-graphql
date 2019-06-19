@@ -1,12 +1,11 @@
 /**
 * @description: requiring the neccessary files
 */
-const redis = require('async-redis');
-const client = redis.createClient();
 const jwt = require('jsonwebtoken')
 const userModel = require('../model/userModel');
 const labelModel = require('../model/labelModel');
 const noteModel = require('../model/noteModel');
+const verifyToken = require('../services/verifyToken').verifyToken
 const signUp = require('../mutations/users/user').signUp;
 const login = require('../mutations/users/user').login;
 const isEmailVerify = require('../mutations/users/user').isEmailVerify
@@ -77,7 +76,7 @@ exports.resolvers = {
                 if (!context.token) {
                     return { "message": "token not provided" }
                 }
-                var payload = await jwt.verify(context.token, process.env.SECRET);
+                var payload = await verifyToken(context.token);
                 var searchNote = new RegExp(args.title);
                 console.log(searchNote);
                 var notes = await noteModel.find({ title: searchNote, userID: payload.userID })
@@ -106,7 +105,7 @@ exports.resolvers = {
                 if (!context.token) {
                     return { "message": "token not provided" }
                 }
-                var payload = await jwt.verify(context.token, process.env.SECRET);
+                var payload = await verifyToken(context.token);
                 var searchNote = new RegExp(args.description)
                 var notes = await noteModel.find({ description: searchNote, userID: payload.userID })
                 if (notes.length > 0) {

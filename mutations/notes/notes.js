@@ -8,6 +8,7 @@
 
 const noteModel = require('../../model/noteModel');
 const jwt = require('jsonwebtoken');
+const verifyToken = require('../../services/verifyToken').verifyToken
 
 
 function allNotes() {
@@ -35,7 +36,7 @@ allNotes.prototype.createNote = async (parent, args, context) => {
                 }
             }
             //verifying the token and to get the user ID 
-            var payload = await jwt.verify(context.token, process.env.SECRET);
+            var payload = await verifyToken(context.token);
             console.log(payload.userID)
             //checking if the title already exists in the database
             var note = await noteModel.find({ "title": args.title });
@@ -94,7 +95,7 @@ allNotes.prototype.updateNote = async (parent, args, context) => {
                     "success": false
                 }
             }
-            var payload = await jwt.verify(context.token, process.env.SECRET);
+            var payload = await verifyToken(context.token);
             //finding the note by note id and updating the title and description fields
             var note = await noteModel.findOneAndUpdate({ "_id": args.noteID, userID: payload.userID },
                 { $set: { title: args.newTitle, description: args.newDescription } })

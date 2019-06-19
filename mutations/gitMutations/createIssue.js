@@ -4,17 +4,19 @@
 
 const { createApolloFetch } = require('apollo-fetch');
 const issueModel = require('../../model/issueModel')
-const userModel = require("../../model/userModel")
+const userModel = require("../../model/userModel");
+const verifyToken = require('../../services/verifyToken').verifyToken
 
 /**
  * @description : to create an issue for a particular repository
  * @purpose : to create issues and to assign users for a particular issue and save it in the database
  */
 
-exports.createIssue = async (parent, params, context) => {
+exports.createIssue = async (parent, params,context) => {
     try {
         var args = params.input
-        var user = await userModel.find({ _id: "5cd541090c42ec2332701aa7" })
+        var payload = verifyToken(context.token)
+        var user = await userModel.find({ _id: payload.userId})
         var gitToken = user[0].gitToken;
         const fetch = createApolloFetch({
             uri: `https://api.github.com/graphql?access_token=${gitToken}`

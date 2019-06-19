@@ -6,6 +6,7 @@ const userModel = require('../../model/userModel')
 const jwt = require('jsonwebtoken')
 const noteModel = require('../../model/noteModel')
 const { createApolloFetch } = require('apollo-fetch');
+const verifyToken = require('../../services/verifyToken').verifyToken
 
 /**
  * @description : for getting the repository details 
@@ -15,7 +16,7 @@ const { createApolloFetch } = require('apollo-fetch');
 exports.getRepo = async (parent, args, context) => {
     try {
         // verifying the token to get the userID
-        var payload = await jwt.verify(context.token, process.env.SECRET);
+        var payload = await verifyToken(context.token);
         var userID = payload.userID
         //finding the user by the userID to get the git token saved in the database
         var user = await userModel.find({ _id: userID })

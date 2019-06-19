@@ -1,5 +1,5 @@
 const redis = require('async-redis');
-const client = redis.createClient()
+client = redis.createClient()
 
 client.on('connect', function () {
     console.log('Redis client connected');
@@ -8,3 +8,4 @@ client.on('connect', function () {
 client.on('error', function (err) {
     console.log('Something went wrong ' + err);
 });
+module.exports = client
