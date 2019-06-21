@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var db = mongoose.connect(process.env.MONGO_URL, {
+var db = mongoose.connect("mongodb://mongodb:27017/mydb", {
     useNewUrlParser: true
 })
 mongoose.connection.on("connected", () => {
